@@ -53,6 +53,9 @@ export default {
             router.replace(`/projects/${res.data.id}`)
           }
         })
+        .catch(res => {
+          alert('An internal server error occurred! Please try again later.')
+        })
     }
   }
 }

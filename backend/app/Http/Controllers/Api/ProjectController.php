@@ -38,9 +38,11 @@ class ProjectController extends Controller
 
     public function store()
     {
-      $attributes = $this->validateProjectRequest();
-
-      $project = Project::create($attributes);
+      $project = Project::create([
+        'title' => 'Untitled',
+        'description' => 'No description',
+        'user_id' => auth()->id()
+      ]);
 
       return $project->toArray();
     }
@@ -55,7 +57,7 @@ class ProjectController extends Controller
 
       $project->update($attributes);
 
-      return 'Success';
+      return $project->toArray();
     }
 
     protected function validateProjectRequest()

@@ -1,10 +1,42 @@
 <template>
   <div class="container mx-auto justify-center mt-4 text-gray-900">
-    <div class="text-2xl">
-      {{ project.title }}
+    <div class="text-2xl text-gray-700" v-if="editing_title">
+      <input class="text-gray-900 bg-gray-200 w-1/3 px-1" ref="title" v-model="formData.title">
+      <span class="ml-1 space-x-1 text-lg">
+        <button type="button" @click="editing_title = false" class="px-2 hover:bg-red-600 rounded-lg hover:text-white transition ease-in-out duration-150">
+          <i class="fas fa-times"></i>
+        </button>
+        <button type="button" @click="updateProjectTitle()" class="px-1 hover:bg-green-600 rounded-lg hover:text-white transition ease-in-out duration-150">
+          <i class="fas fa-check"></i>
+        </button>
+      </span>
     </div>
-    <div class="text-gray-800">
-      {{ project.description }}
+    <div class="text-2xl text-gray-200 hover:text-gray-700" v-else>
+      <span class="text-gray-900">{{ project.title }}</span>
+      <span class="ml-1 text-lg">
+        <button type="button" @click="editTitle()" class="px-1 hover:bg-gray-400 rounded-lg">
+          <i class="fas fa-pen"></i>
+        </button>
+      </span>
+    </div>
+    <div class="text-gray-700 mt-1" v-if="editing_description">
+      <textarea class="text-gray-900 bg-gray-200 w-2/3 px-1" ref="description" v-model="formData.description"></textarea>
+      <span class="ml-1">
+        <button type="button" @click="editing_description = false" class="px-2 hover:bg-red-600 rounded-lg hover:text-white transition ease-in-out duration-150">
+          <i class="fas fa-times"></i>
+        </button>
+        <button type="button" @click="updateProjectDescription()" class="px-1 hover:bg-green-600 rounded-lg hover:text-white transition ease-in-out duration-150">
+          <i class="fas fa-check"></i>
+        </button>
+      </span>
+    </div>
+    <div class="text-gray-200 hover:text-gray-700 mt-1" v-else>
+      <span class="text-gray-800">{{ project.description }}</span>
+      <span class="ml-1">
+        <button type="button" @click="editDescription()" class="px-1 hover:bg-gray-400 rounded-lg">
+          <i class="fas fa-pen"></i>
+        </button>
+      </span>
     </div>
     <div class="mt-4 text-xl text-center font-semibold">
       Tasks: {{ tasks_count }}
@@ -74,7 +106,13 @@ export default {
   data () {
     return {
       project: {},
-      tasks: []
+      editing_title: false,
+      editing_description: false,
+      tasks: [],
+      formData: {
+        title: '',
+        description: ''
+      }
     }
   },
   computed: {
@@ -103,6 +141,34 @@ export default {
     }
   },
   methods: {
+    updateProjectTitle () {
+      axios.patch(`/api/projects/${this.project.id}?token=${this.$store.state.authToken}`, {
+        title: this.formData.title,
+        description: this.project.description
+      })
+        .then(res => {
+          this.editing_title = false
+          this.project.title = res.data.title
+        })
+    },
+    updateProjectDescription () {
+      axios.patch(`/api/projects/${this.project.id}?token=${this.$store.state.authToken}`, {
+        title: this.project.title,
+        description: this.formData.description
+      })
+        .then(res => {
+          this.editing_description = false
+          this.project.description = res.data.description
+        })
+    },
+    editTitle () {
+      this.editing_title = true
+      this.$nextTick(() => this.$refs.title.focus())
+    },
+    editDescription () {
+      this.editing_description = true
+      this.$nextTick(() => this.$refs.description.focus())
+    },
     createTask (payload) {
       var status = 'unsigned'
       switch (payload.statusId) {
@@ -142,6 +208,8 @@ export default {
     axios.get(`/api/projects/${this.$route.params.id}?token=${this.$store.state.authToken}`)
       .then(res => {
         this.project = res.data
+        this.formData.title = this.project.title
+        this.formData.description = this.project.description
         axios.get(`/api/projects/${this.$route.params.id}/tasks?token=${this.$store.state.authToken}`)
           .then(res2 => {
             this.tasks = res2.data
