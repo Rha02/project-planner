@@ -13,12 +13,7 @@ class AuthController extends Controller
     {
       $this->middleware('auth:api')->except('login', 'register');
     }
-
-    private function guard()
-    {
-      return auth()->guard();
-    }
-
+    
     protected function respondWithToken($token)
     {
       return response()->json([

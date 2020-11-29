@@ -1,23 +1,30 @@
 <template>
   <div class="container mx-auto justify-center mt-4 text-gray-900">
-    <div class="text-2xl text-gray-700" v-if="editing_title">
-      <input class="text-gray-900 bg-gray-200 w-1/3 px-1" ref="title" v-model="formData.title">
-      <span class="ml-1 space-x-1 text-lg">
-        <button type="button" @click="editing_title = false" class="px-2 hover:bg-red-600 rounded-lg hover:text-white transition ease-in-out duration-150">
-          <i class="fas fa-times"></i>
+    <div class="flex justify-between mx-2 md:mx-1 lg:mx-0 xl:mx-0">
+      <div class="text-2xl text-gray-700" v-if="editing_title">
+        <input class="text-gray-900 bg-gray-200 w-3/43 px-1" ref="title" v-model="formData.title">
+        <span class="ml-1 space-x-1 text-lg">
+          <button type="button" @click="editing_title = false" class="px-2 hover:bg-red-600 rounded-lg hover:text-white transition ease-in-out duration-150">
+            <i class="fas fa-times"></i>
+          </button>
+          <button type="button" @click="updateProjectTitle()" class="px-1 hover:bg-green-600 rounded-lg hover:text-white transition ease-in-out duration-150">
+            <i class="fas fa-check"></i>
+          </button>
+        </span>
+      </div>
+      <div class="text-2xl text-gray-200 hover:text-gray-700" v-else>
+        <span class="text-gray-900">{{ project.title }}</span>
+        <span class="ml-1 text-lg">
+          <button type="button" @click="editTitle()" class="px-1 hover:bg-gray-400 hover:text-purple-700 rounded-lg transition ease-in-out duration-150">
+            <i class="fas fa-pen"></i>
+          </button>
+        </span>
+      </div>
+      <div class="flex-none text-gray-700 text-2xl">
+        <button type="button" @click="inSettings = true" class="px-2 hover:bg-gray-400 hover:text-purple-700 rounded-lg transition ease-in-out duration-150">
+          <i class="fas fa-cog"></i>
         </button>
-        <button type="button" @click="updateProjectTitle()" class="px-1 hover:bg-green-600 rounded-lg hover:text-white transition ease-in-out duration-150">
-          <i class="fas fa-check"></i>
-        </button>
-      </span>
-    </div>
-    <div class="text-2xl text-gray-200 hover:text-gray-700" v-else>
-      <span class="text-gray-900">{{ project.title }}</span>
-      <span class="ml-1 text-lg">
-        <button type="button" @click="editTitle()" class="px-1 hover:bg-gray-400 rounded-lg">
-          <i class="fas fa-pen"></i>
-        </button>
-      </span>
+      </div>
     </div>
     <div class="text-gray-700 mt-1" v-if="editing_description">
       <textarea class="text-gray-900 bg-gray-200 w-2/3 px-1" ref="description" v-model="formData.description"></textarea>
@@ -33,7 +40,7 @@
     <div class="text-gray-200 hover:text-gray-700 mt-1" v-else>
       <span class="text-gray-800">{{ project.description }}</span>
       <span class="ml-1">
-        <button type="button" @click="editDescription()" class="px-1 hover:bg-gray-400 rounded-lg">
+        <button type="button" @click="editDescription()" class="px-1 hover:bg-gray-400 rounded-lg hover:text-purple-700 transition ease-in-out duration-150">
           <i class="fas fa-pen"></i>
         </button>
       </span>
@@ -91,23 +98,27 @@
         </div>
       </div>
     </div>
+    <settings-modal :showing="inSettings" @stopShowing="inSettings = false"></settings-modal>
   </div>
 </template>
 
 <script>
 import TaskForm from '../components/TaskForm.vue'
 import Task from '../components/Task.vue'
+import ProjectSettingsModal from '../components/ProjectSettingsModal.vue'
 import axios from 'axios'
 export default {
   components: {
     taskform: TaskForm,
-    task: Task
+    task: Task,
+    settingsModal: ProjectSettingsModal
   },
   data () {
     return {
       project: {},
       editing_title: false,
       editing_description: false,
+      inSettings: false,
       tasks: [],
       formData: {
         title: '',
