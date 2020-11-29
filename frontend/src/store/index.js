@@ -48,6 +48,7 @@ export default new Vuex.Store({
     setLogoutTimer ({ dispatch }, expirationTime) {
       setTimeout(function () {
         dispatch('logout')
+        console.log('Logout timer is over!')
       }, expirationTime * 1000)
     },
     login ({ commit, dispatch }, authData) {

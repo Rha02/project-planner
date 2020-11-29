@@ -16,8 +16,8 @@
       </div>
       <p class="text-lg text-gray-800">To be implemented</p>
       <div class="flex flex-row-reverse">
-          <button type="button" @click="stopShowing" class="mx-1 px-2 py-1 font-semibold rounded bg-blue-600 hover:bg-blue-500 text-white transition ease-in-out duration-150">Update</button>
-          <button type="button" class="mx-1 px-2 py-1 font-semibold rounded border border-red-600 hover:bg-red-600 text-red-600 hover:text-white transition ease-in-out duration-150">Delete</button>
+          <button type="button" @click="stopShowing()" class="mx-1 px-2 py-1 font-semibold rounded bg-blue-600 hover:bg-blue-500 text-white transition ease-in-out duration-150">Update</button>
+          <button type="button" @click="deleteProject()" class="mx-1 px-2 py-1 font-semibold rounded border border-red-600 hover:bg-red-600 text-red-600 hover:text-white transition ease-in-out duration-150">Delete</button>
       </div>
     </div>
   </div>
@@ -29,6 +29,11 @@ export default {
   methods: {
     stopShowing () {
       this.$emit('stopShowing')
+    },
+    deleteProject () {
+      if (confirm('You are about to permannently delete this project. Do you wish to proceed?')) {
+        this.$emit('deleteProject')
+      }
     }
   }
 }

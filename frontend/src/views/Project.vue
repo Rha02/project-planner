@@ -98,7 +98,7 @@
         </div>
       </div>
     </div>
-    <settings-modal :showing="inSettings" @stopShowing="inSettings = false"></settings-modal>
+    <settings-modal :showing="inSettings" @deleteProject="deleteProject" @stopShowing="inSettings = false"></settings-modal>
   </div>
 </template>
 
@@ -170,6 +170,12 @@ export default {
         .then(res => {
           this.editing_description = false
           this.project.description = res.data.description
+        })
+    },
+    deleteProject () {
+      axios.delete(`/api/projects/${this.project.id}?token=${this.$store.state.authToken}`)
+        .then(res => {
+          this.$router.push('/dashboard')
         })
     },
     editTitle () {
