@@ -46,7 +46,7 @@
       </span>
     </div>
     <div class="mt-4 text-xl text-center font-semibold">
-      Tasks: {{ tasks_count }}
+      Tasks: {{ tasks.length }}
     </div>
     <div class="flex flex-wrap -mb-4 mt-2">
       <div class="w-1/4 px-2">
@@ -54,7 +54,7 @@
           <div class="text-lg text-center text-gray-800 font-semibold pt-2">
             No Status
           </div>
-          <div class="text-white hover:text-gray-800 shadow-lg rounded-md text-lg bg-gray-100 mx-2 my-3 py-1 px-2"
+          <div class=""
                 v-for="task in unsigned_tasks" :key="task.id">
             <task :task="task" @taskDeleted="removeTask" @taskUpdated="updateTask"></task>
           </div>
@@ -66,7 +66,7 @@
           <div class="text-lg text-center text-gray-800 font-semibold pt-2">
             Not Started
           </div>
-          <div class="text-white hover:text-gray-800 shadow-lg rounded-md text-lg bg-gray-100 mx-2 my-3 py-1 px-2"
+          <div class=""
                 v-for="task in not_started_tasks" :key="task.id">
             <task :task="task" @taskDeleted="removeTask" @taskUpdated="updateTask"></task>
           </div>
@@ -78,7 +78,7 @@
           <div class="text-lg text-center text-gray-800 font-semibold pt-2">
             In Progress
           </div>
-          <div class="text-white hover:text-gray-800 shadow-lg rounded-md text-lg bg-gray-100 mx-2 my-3 py-1 px-2"
+          <div class=""
                 v-for="task in in_progress_tasks" :key="task.id">
             <task :task="task" @taskDeleted="removeTask" @taskUpdated="updateTask"></task>
           </div>
@@ -90,7 +90,7 @@
           <div class="text-lg text-center text-gray-800 font-semibold pt-2">
             Completed
           </div>
-          <div class="text-white hover:text-gray-800 shadow-lg rounded-md text-lg bg-gray-100 mx-2 my-3 py-1 px-2"
+          <div class=""
                 v-for="task in completed_tasks" :key="task.id">
             <task :task="task" @taskDeleted="removeTask" @taskUpdated="updateTask"></task>
           </div>
@@ -127,9 +127,6 @@ export default {
     }
   },
   computed: {
-    tasks_count () {
-      return this.tasks.length
-    },
     completed_tasks () {
       return this.tasks.filter(function (task) {
         return task.status === 'complete'

@@ -1,6 +1,6 @@
 <template>
   <div class="">
-    <div class="items-center" v-if="! editing">
+    <div class="text-white hover:text-gray-800 shadow-lg rounded-md text-lg bg-gray-100 mx-2 my-3 py-1 px-2 items-center">
       <div class="w-full text-gray-800 overflow-auto">
         {{ task.body }}
       </div>
@@ -17,36 +17,23 @@
         </div>
       </div>
     </div>
-    <div class="text-center text-lg text-gray-900" v-else>
-      <textarea type="text" rows="4" cols="22" class="mt-2 bg-gray-300 rounded-md px-2 py-1" v-model="formData.body"></textarea>
-      <br>
-      Status:
-      <select class="mt-2 bg-gray-300 rounded-md px-2 py-1" v-model="formData.status">
-        <option disabled value="">Choose Status</option>
-        <option value="unsigned">No Status</option>
-        <option value="not_started">Not Started</option>
-        <option value="in_progress">In Progress</option>
-        <option value="complete">Completed</option>
-      </select>
-      <div class="flex justify-between px-1 py-1">
-        <button type="button" @click="editing = false">Cancel</button>
-        <button type="button" @click="updateTask" class="bg-blue-600 text-gray-100 hover:bg-blue-500 hover:text-white px-2 py-1 rounded">Update</button>
-      </div>
+    <div class="">
+      <task-edit-modal :showing="editing" :task="task" @stopShowing="editing = false" @updateTask="updateTask"></task-edit-modal>
     </div>
   </div>
 </template>
 
 <script>
+import TaskEditModal from '../components/TaskEditModal.vue'
 import axios from 'axios'
 export default {
   props: ['task'],
+  components: {
+    taskEditModal: TaskEditModal
+  },
   data () {
     return {
-      editing: false,
-      formData: {
-        status: this.task.status,
-        body: this.task.body
-      }
+      editing: false
     }
   },
   methods: {
@@ -56,13 +43,17 @@ export default {
           this.$emit('taskDeleted', this.task.id)
         })
     },
-    updateTask () {
+    updateTask (payload) {
       axios.patch(`/api/projects/${this.$route.params.id}/tasks/${this.task.id}?token=${this.$store.state.authToken}`, {
-        status: this.formData.status,
-        body: this.formData.body
+        status: payload.status,
+        body: payload.body
       })
         .then(res => {
           this.$emit('taskUpdated', res.data)
+          this.editing = false
+        })
+        .catch(res => {
+          alert('An error has occured! Please try again later.')
           this.editing = false
         })
     }
