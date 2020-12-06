@@ -13,7 +13,7 @@ class TaskController extends Controller
 {
     public function index(Project $project)
     {
-      if (auth()->id() != $project->user_id) {
+      if (! $project->members->contains(auth()->user())) {
         abort(403);
       }
 
@@ -24,7 +24,7 @@ class TaskController extends Controller
 
     public function store(Project $project)
     {
-      if (auth()->id() != $project->user_id) {
+      if (! $project->members->contains(auth()->user())) {
         abort(403, 'This action is forbidden!');
       }
 
@@ -55,7 +55,7 @@ class TaskController extends Controller
 
     public function destroy(Project $project, Task $task)
     {
-      if (auth()->id() != $project->user_id) {
+      if (! $project->members->contains(auth()->user())) {
         abort(403);
       }
 
@@ -66,7 +66,7 @@ class TaskController extends Controller
 
     public function update(Project $project, Task $task)
     {
-      if (auth()->id() != $project->user_id) {
+      if (! $project->members->contains(auth()->user())) {
         abort(403);
       }
 

@@ -11,14 +11,16 @@ class ProjectController extends Controller
 {
     public function index()
     {
-      $projects = Project::where('user_id', auth()->id())->get();
+      $projects = Project::all()->filter(function ($project) {
+        return $project->members->contains(auth()->id());
+      });
 
       return $projects->toArray();
     }
 
     public function show(Project $project)
     {
-      if (auth()->id() != $project->user_id) {
+      if (! $project->members->contains(auth()->user())) {
         abort(403, 'This action is forbidden');
       }
 
@@ -51,7 +53,7 @@ class ProjectController extends Controller
 
     public function update(Project $project)
     {
-      if (auth()->id() != $project->user_id) {
+      if (! $project->members->contains(auth()->user())) {
         abort(403, 'This action is forbidden');
       }
 
@@ -77,7 +79,6 @@ class ProjectController extends Controller
       }
 
       $attributes = $validator->validated();
-      $attributes['user_id'] = auth()->id();
 
       if (! $attributes['title']) {
         $attributes['title'] = 'Untitled';
