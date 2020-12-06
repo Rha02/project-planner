@@ -44,6 +44,8 @@ class ProjectController extends Controller
         'user_id' => auth()->id()
       ]);
 
+      $project->members()->attach(auth()->id());
+
       return $project->toArray();
     }
 
