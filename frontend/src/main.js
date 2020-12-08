@@ -8,7 +8,7 @@ import './assets/styles/index.css'
 
 Vue.use(VueRouter)
 
-axios.defaults.baseURL = 'http://todoapp.loc/'
+axios.defaults.baseURL = 'http://todoapp.loc/api'
 
 Vue.config.productionTip = false
 

@@ -18,7 +18,7 @@ class ProjectUserController extends Controller
 
     public function store(Project $project)
     {
-      $this->authorized();
+      $this->authorized($project);
 
       $member = User::where('email', request('email'))->first();
 
@@ -46,7 +46,7 @@ class ProjectUserController extends Controller
 
     public function destroy(Project $project)
     {
-      $this->authorized();
+      $this->authorized($project);
 
       $member = User::where('email', request('email'))->first();
 
@@ -63,7 +63,7 @@ class ProjectUserController extends Controller
       return 'Success';
     }
 
-    protected function authorized()
+    protected function authorized($project)
     {
       if ($project->user_id != $this->user->id) {
         abort(422); // TODO: make an appropriate error message

@@ -20,7 +20,7 @@ class TaskController extends Controller
 
     public function index(Project $project)
     {
-      $this->authorized();
+      $this->authorized($project);
 
       $tasks = $project->tasks->toArray();
 
@@ -29,7 +29,7 @@ class TaskController extends Controller
 
     public function store(Project $project)
     {
-      $this->authorized();
+      $this->authorized($project);
 
       $validator = Validator::make(request()->all(), [
         'body' => 'required|string|max:3000',
@@ -67,7 +67,7 @@ class TaskController extends Controller
 
     public function update(Project $project, Task $task)
     {
-      $this->authorized();
+      $this->authorized($project);
 
       $validator = Validator::make(request()->all(), [
         'body' => 'required|string|max:3000',
@@ -92,12 +92,12 @@ class TaskController extends Controller
       return $task->toArray();
     }
 
-    protected function authorized()
+    protected function authorized($project)
     {
       if (! $project->members->contains($this->user)) {
         abort(403);
       }
 
-      return
+      return;
     }
 }

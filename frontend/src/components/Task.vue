@@ -36,26 +36,30 @@ export default {
       editing: false
     }
   },
+  computed: {
+    taskUri () {
+      return `/projects/${this.$route.params.id}/tasks/${this.task.id}?token=${this.$store.state.authToken}`
+    }
+  },
   methods: {
     deleteTask () {
-      axios.delete(`/api/projects/${this.$route.params.id}/tasks/${this.task.id}?token=${this.$store.state.authToken}`)
+      axios.delete(this.taskUri)
         .then(res => {
           this.$emit('taskDeleted', this.task.id)
         })
     },
     updateTask (payload) {
-      axios.patch(`/api/projects/${this.$route.params.id}/tasks/${this.task.id}?token=${this.$store.state.authToken}`, {
+      axios.patch(this.taskUri, {
         status: payload.status,
         body: payload.body
       })
         .then(res => {
           this.$emit('taskUpdated', res.data)
-          this.editing = false
         })
         .catch(res => {
           alert('An error has occured! Please try again later.')
-          this.editing = false
         })
+      this.editing = false
     }
   }
 }

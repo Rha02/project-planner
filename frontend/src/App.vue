@@ -45,7 +45,7 @@ export default {
   },
   methods: {
     createProject () {
-      axios.post(`/api/projects?token=${this.$store.state.authToken}`, [])
+      axios.post(`/projects?token=${this.$store.state.authToken}`, [])
         .then(res => {
           if (res.data.is_error) {
             alert('An error has occured. Please try again later.')

@@ -43,10 +43,15 @@
 import axios from 'axios'
 export default {
   props: ['showing', 'project'],
+  computed: {
+    authToken () {
+      return this.$store.state.authToken
+    }
+  },
   methods: {
     addMember () {
       var memberEmail = document.getElementById('memberInput').value
-      axios.get(`/api/users?email=${memberEmail}&token=${this.$store.state.authToken}`)
+      axios.get(`/users?email=${memberEmail}&token=${this.authToken}`)
         .then(res => {
           if (res.data.is_error) {
             alert(res.data.message)
@@ -62,7 +67,7 @@ export default {
             alert('This user is already a member of this project')
           } else {
             document.getElementById('memberInput').value = ''
-            axios.post(`/api/projects/${this.project.id}/members?token=${this.$store.state.authToken}`, {
+            axios.post(`/projects/${this.project.id}/members?token=${this.authToken}`, {
               email: res.data.email
             })
               .then(res2 => {
@@ -76,7 +81,7 @@ export default {
         })
     },
     removeMember (email) {
-      axios.delete(`/api/projects/${this.project.id}/members?email=${email}&token=${this.$store.state.authToken}`)
+      axios.delete(`/projects/${this.project.id}/members?email=${email}&token=${this.authToken}`)
         .then(res => {
           this.$emit('removeMember', email)
         })

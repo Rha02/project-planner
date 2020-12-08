@@ -34,7 +34,7 @@ export default {
     }
   },
   created () {
-    axios.get(`/api/projects?token=${this.$store.state.authToken}`)
+    axios.get(`/projects?token=${this.$store.state.authToken}`)
       .then(res => {
         this.projects = res.data
       })

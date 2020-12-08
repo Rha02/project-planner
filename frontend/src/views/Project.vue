@@ -55,7 +55,7 @@
             No Status
           </div>
           <div class=""
-                v-for="task in unsigned_tasks" :key="task.id">
+                v-for="task in filteredTasks('unsigned')" :key="task.id">
             <task :task="task" @taskDeleted="removeTask" @taskUpdated="updateTask"></task>
           </div>
           <taskform @addTask="createTask" statusId="0"></taskform>
@@ -67,7 +67,7 @@
             Not Started
           </div>
           <div class=""
-                v-for="task in not_started_tasks" :key="task.id">
+                v-for="task in filteredTasks('not_started')" :key="task.id">
             <task :task="task" @taskDeleted="removeTask" @taskUpdated="updateTask"></task>
           </div>
           <taskform @addTask="createTask" statusId="1"></taskform>
@@ -79,7 +79,7 @@
             In Progress
           </div>
           <div class=""
-                v-for="task in in_progress_tasks" :key="task.id">
+                v-for="task in filteredTasks('in_progress')" :key="task.id">
             <task :task="task" @taskDeleted="removeTask" @taskUpdated="updateTask"></task>
           </div>
           <taskform @addTask="createTask" statusId="2"></taskform>
@@ -91,7 +91,7 @@
             Completed
           </div>
           <div class=""
-                v-for="task in completed_tasks" :key="task.id">
+                v-for="task in filteredTasks('complete')" :key="task.id">
             <task :task="task" @taskDeleted="removeTask" @taskUpdated="updateTask"></task>
           </div>
           <taskform @addTask="createTask" statusId="3"></taskform>
@@ -127,28 +127,16 @@ export default {
     }
   },
   computed: {
-    completed_tasks () {
-      return this.tasks.filter(function (task) {
-        return task.status === 'complete'
-      })
-    },
-    in_progress_tasks () {
-      return this.tasks.filter(function (task) {
-        return task.status === 'in_progress'
-      })
-    },
-    not_started_tasks () {
-      return this.tasks.filter(function (task) {
-        return task.status === 'not_started'
-      })
-    },
-    unsigned_tasks () {
-      return this.tasks.filter(function (task) {
-        return task.status === 'unsigned'
-      })
+    authToken () {
+      return this.$store.state.authToken
     }
   },
   methods: {
+    filteredTasks (status) {
+      return this.tasks.filter(function (task) {
+        return task.status === status // statuses: complete, in_progress, not_started, unsigned
+      })
+    },
     addMember (payload) {
       this.project.members.push(payload)
     },
@@ -158,7 +146,7 @@ export default {
       })
     },
     updateProjectTitle () {
-      axios.patch(`/api/projects/${this.project.id}?token=${this.$store.state.authToken}`, {
+      axios.patch(`/projects/${this.project.id}?token=${this.authToken}`, {
         title: this.formData.title,
         description: this.project.description
       })
@@ -168,7 +156,7 @@ export default {
         })
     },
     updateProjectDescription () {
-      axios.patch(`/api/projects/${this.project.id}?token=${this.$store.state.authToken}`, {
+      axios.patch(`/projects/${this.project.id}?token=${this.authToken}`, {
         title: this.project.title,
         description: this.formData.description
       })
@@ -178,7 +166,7 @@ export default {
         })
     },
     deleteProject () {
-      axios.delete(`/api/projects/${this.project.id}?token=${this.$store.state.authToken}`)
+      axios.delete(`/projects/${this.project.id}?token=${this.authToken}`)
         .then(res => {
           this.$router.push('/dashboard')
         })
@@ -206,7 +194,7 @@ export default {
           status = 'complete'
           break
       }
-      axios.post(`/api/projects/${this.$route.params.id}/tasks?token=${this.$store.state.authToken}`, {
+      axios.post(`/projects/${this.project.id}/tasks?token=${this.authToken}`, {
         status,
         body: payload.body
       }).then(res => {
@@ -227,12 +215,12 @@ export default {
     }
   },
   created () {
-    axios.get(`/api/projects/${this.$route.params.id}?token=${this.$store.state.authToken}`)
+    axios.get(`/projects/${this.$route.params.id}?token=${this.authToken}`)
       .then(res => {
         this.project = res.data
         this.formData.title = this.project.title
         this.formData.description = this.project.description
-        axios.get(`/api/projects/${this.$route.params.id}/tasks?token=${this.$store.state.authToken}`)
+        axios.get(`/projects/${this.project.id}/tasks?token=${this.authToken}`)
           .then(res2 => {
             this.tasks = res2.data
           })

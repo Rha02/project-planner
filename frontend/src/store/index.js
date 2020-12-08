@@ -52,7 +52,7 @@ export default new Vuex.Store({
       }, expirationTime * 1000)
     },
     login ({ commit, dispatch }, authData) {
-      axios.post('/api/login', {
+      axios.post('/login', {
         email: authData.email,
         password: authData.password
       })
@@ -74,7 +74,7 @@ export default new Vuex.Store({
         })
     },
     register ({ commit, dispatch }, data) {
-      axios.post('/api/register', {
+      axios.post('/register', {
         email: data.email,
         name: data.name,
         password: data.password,
@@ -98,7 +98,7 @@ export default new Vuex.Store({
         })
     },
     fetchUser ({ commit, state }) {
-      axios.get(`/api/user?token=${state.authToken}`)
+      axios.get(`/user?token=${state.authToken}`)
         .then(res => {
           commit('storeUser', res.data.data)
         })
