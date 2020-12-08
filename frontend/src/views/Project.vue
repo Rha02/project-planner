@@ -98,7 +98,7 @@
         </div>
       </div>
     </div>
-    <settings-modal :showing="inSettings" @deleteProject="deleteProject" @stopShowing="inSettings = false"></settings-modal>
+    <settings-modal :showing="inSettings" :project="project" @addMember="addMember" @removeMember="removeMember" @deleteProject="deleteProject" @stopShowing="inSettings = false"></settings-modal>
   </div>
 </template>
 
@@ -149,6 +149,14 @@ export default {
     }
   },
   methods: {
+    addMember (payload) {
+      this.project.members.push(payload)
+    },
+    removeMember (email) {
+      this.project.members = this.project.members.filter(function (member) {
+        return member.email !== email
+      })
+    },
     updateProjectTitle () {
       axios.patch(`/api/projects/${this.project.id}?token=${this.$store.state.authToken}`, {
         title: this.formData.title,
