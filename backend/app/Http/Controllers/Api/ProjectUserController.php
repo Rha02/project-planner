@@ -9,30 +9,35 @@ use App\Models\User;
 
 class ProjectUserController extends Controller
 {
+    protected $user;
+
+    public function __construct()
+    {
+      $this->user = auth()->user();
+    }
+
     public function store(Project $project)
     {
-      if ($project->user_id != auth()->id()) {
-        abort(403); // TODO: make this an error message
-      }
+      $this->authorized();
 
-      $user = User::where('email', request('email'))->first();
+      $member = User::where('email', request('email'))->first();
 
-      if (! $user) {
+      if (! $member) {
         abort(422); // TODO: make this an error message
       }
 
-      if ($project->members->contains($user)) {
+      if ($project->members->contains($member)) {
         abort(422); // TODO: make this an error message
       }
 
-      $project->members()->attach($user->id);
+      $project->members()->attach($member->id);
 
       return $project->members;
     }
 
     public function index(Project $project)
     {
-      if (! $project->members->contains(auth()->user())) {
+      if (! $project->members->contains($this->user->id)) {
         abort(403); // TODO: make this an error message
       }
 
@@ -41,22 +46,29 @@ class ProjectUserController extends Controller
 
     public function destroy(Project $project)
     {
-      if ($project->user_id != auth()->id()) {
+      $this->authorized();
+
+      $member = User::where('email', request('email'))->first();
+
+      if (!$member || !$project->members->contains($member)) {
         abort(422); // TODO: make an appropriate error message
       }
 
-      $user = User::where('email', request('email'))->first();
-
-      if (!$user || !$project->members->contains($user)) {
-        abort(422); // TODO: make an appropriate error message
-      }
-
-      if ($project->user_id == $user->id) {
+      if ($project->user_id == $member->id) {
         abort(422); // // TODO: make an appropriate error message
       }
 
-      $project->members()->detach($user->id);
+      $project->members()->detach($member->id);
 
       return 'Success';
+    }
+
+    protected function authorized()
+    {
+      if ($project->user_id != $this->user->id) {
+        abort(422); // TODO: make an appropriate error message
+      }
+
+      return;
     }
 }

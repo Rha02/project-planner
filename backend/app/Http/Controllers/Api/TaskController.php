@@ -11,11 +11,16 @@ use App\Models\Task;
 
 class TaskController extends Controller
 {
+    protected $user;
+
+    public function __construct()
+    {
+      $this->user = auth()->user();
+    }
+
     public function index(Project $project)
     {
-      if (! $project->members->contains(auth()->user())) {
-        abort(403);
-      }
+      $this->authorized();
 
       $tasks = $project->tasks->toArray();
 
@@ -24,9 +29,7 @@ class TaskController extends Controller
 
     public function store(Project $project)
     {
-      if (! $project->members->contains(auth()->user())) {
-        abort(403, 'This action is forbidden!');
-      }
+      $this->authorized();
 
       $validator = Validator::make(request()->all(), [
         'body' => 'required|string|max:3000',
@@ -55,9 +58,7 @@ class TaskController extends Controller
 
     public function destroy(Project $project, Task $task)
     {
-      if (! $project->members->contains(auth()->user())) {
-        abort(403);
-      }
+      $this->authorized();
 
       $task->delete();
 
@@ -66,9 +67,7 @@ class TaskController extends Controller
 
     public function update(Project $project, Task $task)
     {
-      if (! $project->members->contains(auth()->user())) {
-        abort(403);
-      }
+      $this->authorized();
 
       $validator = Validator::make(request()->all(), [
         'body' => 'required|string|max:3000',
@@ -91,5 +90,14 @@ class TaskController extends Controller
       $task->update($attributes);
 
       return $task->toArray();
+    }
+
+    protected function authorized()
+    {
+      if (! $project->members->contains($this->user)) {
+        abort(403);
+      }
+
+      return
     }
 }

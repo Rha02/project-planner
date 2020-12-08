@@ -9,10 +9,17 @@ use Illuminate\Support\Facades\Validator;
 
 class ProjectController extends Controller
 {
+    protected $user;
+
+    public function __construct()
+    {
+      $this->user = auth()->user();
+    }
+
     public function index()
     {
       $projects = Project::all()->filter(function ($project) {
-        return $project->members->contains(auth()->id());
+        return $project->members->contains($this->user->id);
       });
 
       return $projects->toArray();
@@ -20,7 +27,7 @@ class ProjectController extends Controller
 
     public function show(Project $project)
     {
-      if (! $project->members->contains(auth()->user())) {
+      if (! $project->members->contains($this->user)) {
         abort(403, 'This action is forbidden');
       }
 
@@ -29,7 +36,7 @@ class ProjectController extends Controller
 
     public function destroy(Project $project)
     {
-      if (auth()->id() != $project->user_id) {
+      if ($this->user->id != $project->user_id) {
         abort(403, 'This action is forbidden');
       }
 
@@ -46,14 +53,14 @@ class ProjectController extends Controller
         'user_id' => auth()->id()
       ]);
 
-      $project->members()->attach(auth()->id());
+      $project->members()->attach($this->user->id);
 
       return $project->toArray();
     }
 
     public function update(Project $project)
     {
-      if (! $project->members->contains(auth()->user())) {
+      if (! $project->members->contains($this->user)) {
         abort(403, 'This action is forbidden');
       }
 

@@ -13,7 +13,7 @@ class AuthController extends Controller
     {
       $this->middleware('auth:api')->except('login', 'register');
     }
-    
+
     protected function respondWithToken($token)
     {
       return response()->json([
@@ -26,9 +26,7 @@ class AuthController extends Controller
 
     public function login()
     {
-      $credentials = request(['email', 'password']);
-
-      if (! $token = auth()->attempt($credentials)) {
+      if (! $token = auth()->attempt(request(['email', 'password']))) {
         return response()->json([
           'is_error' => true,
           'error' => 'Unauthorized',
