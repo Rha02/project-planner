@@ -95,7 +95,10 @@ class TaskController extends Controller
     protected function authorized($project)
     {
       if (! $project->members->contains($this->user)) {
-        abort(403);
+        return response()->json([
+          'is_error' => true,
+          'message' = 'You are not authorized for this action.'
+        ]);
       }
 
       return;

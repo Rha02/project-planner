@@ -33,7 +33,10 @@ class ProjectController extends Controller
     public function show(Project $project)
     {
       if (! $project->members->contains($this->user)) {
-        abort(403, 'This action is forbidden');
+        return response()->json([
+          'is_error' => true,
+          'message' = 'You are not authorized for this action.'
+        ]);
       }
 
       return $project->toArray();
@@ -42,7 +45,10 @@ class ProjectController extends Controller
     public function destroy(Project $project)
     {
       if ($this->user->id != $project->user_id) {
-        abort(403, 'This action is forbidden');
+        return response()->json([
+          'is_error' => true,
+          'message' = 'You are not authorized for this action.'
+        ]);
       }
 
       $project->delete();
@@ -66,7 +72,10 @@ class ProjectController extends Controller
     public function update(Project $project)
     {
       if (! $project->members->contains($this->user)) {
-        abort(403, 'This action is forbidden');
+        return response()->json([
+          'is_error' => true,
+          'message' = 'You are not authorized for this action.'
+        ]);
       }
 
       $attributes = $this->validateProjectRequest();
