@@ -4,7 +4,7 @@
               <div class="container mx-auto flex justify-between py-2">
                 <ul>
                   <li class="hover:bg-gray-700 hover:text-white py-1 rounded-lg">
-                      <router-link to="/" class="px-2 py-1">Home</router-link>
+                      <router-link to="/dashboard" class="px-2 py-1">Home</router-link>
                   </li>
                 </ul>
                 <ul class="flex" v-if="! isAuth">

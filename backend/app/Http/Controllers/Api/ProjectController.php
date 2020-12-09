@@ -18,11 +18,16 @@ class ProjectController extends Controller
 
     public function index()
     {
-      $projects = Project::all()->filter(function ($project) {
-        return $project->members->contains($this->user->id);
+      $ownedProjects = $this->user->projects;
+
+      $sharedProjects = Project::all()->filter(function ($project) {
+        return $project->members->contains($this->user) && $this->user->id != $project->user_id;
       });
 
-      return $projects->toArray();
+      return response()->json([
+        'ownedProjects' => $ownedProjects->toArray(),
+        'sharedProjects' => $sharedProjects->toArray()
+      ]);
     }
 
     public function show(Project $project)

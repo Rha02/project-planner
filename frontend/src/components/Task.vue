@@ -5,20 +5,20 @@
         {{ task.body }}
       </div>
       <div class="flex justify-between">
-        <div class="w-12 text-center hover:text-red-700">
-          <button type="button" @click="deleteTask" class="w-12">
+        <div class="text-center hover:text-red-700">
+          <button type="button" class="px-1" @click="deleteTask">
             <i class="fas fa-trash"></i>
           </button>
         </div>
-        <div class="w-12 text-center hover:text-blue-700">
-          <button type="button" class="w-12">
-            <i class="fas fa-pen" @click="editing = true"></i>
+        <div class="text-center hover:text-blue-700">
+          <button type="button" class="px-1" @click="editing = true">
+            <i class="fas fa-pen"></i>
           </button>
         </div>
       </div>
     </div>
-    <div class="">
-      <task-edit-modal :showing="editing" :task="task" @stopShowing="editing = false" @updateTask="updateTask"></task-edit-modal>
+    <div class="" v-if="editing">
+      <task-edit-modal :task="task" @stopShowing="editing = false" @updateTask="updateTask"></task-edit-modal>
     </div>
   </div>
 </template>

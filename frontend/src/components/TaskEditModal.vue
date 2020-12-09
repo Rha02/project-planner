@@ -1,5 +1,5 @@
 <template>
-  <div class="absolute inset-0 flex items-center justify-center" v-if="showing">
+  <div class="absolute inset-0 flex items-center justify-center">
     <div class="fixed inset-0 h-full w-full opacity-75 bg-gray-900" @click="stopShowing()"></div>
     <div class="fixed items-center bg-gray-100 rounded-lg px-3 pt-2 pb-4 w-1/2">
       <div class="flex items-center justify-between">
@@ -33,7 +33,7 @@
 
 <script>
 export default {
-  props: ['showing', 'task'],
+  props: ['task'],
   data () {
     return {
       formData: {
