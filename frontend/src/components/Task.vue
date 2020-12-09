@@ -5,12 +5,12 @@
         {{ task.body }}
       </div>
       <div class="flex justify-between">
-        <div class="text-center hover:text-red-700">
+        <div class="text-center hover:text-red-700 transition ease-in-out duration-150">
           <button type="button" class="px-1" @click="deleteTask">
             <i class="fas fa-trash"></i>
           </button>
         </div>
-        <div class="text-center hover:text-blue-700">
+        <div class="text-center hover:text-blue-700 transition ease-in-out duration-150">
           <button type="button" class="px-1" @click="editing = true">
             <i class="fas fa-pen"></i>
           </button>
