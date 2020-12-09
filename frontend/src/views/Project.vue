@@ -151,8 +151,15 @@ export default {
         description: this.project.description
       })
         .then(res => {
-          this.editing_title = false
-          this.project.title = res.data.title
+          if (res.data.is_error) {
+            alert(res.data.message)
+          } else {
+            this.editing_title = false
+            this.project.title = res.data.title
+          }
+        })
+        .catch(res => {
+          alert('Server-side error occurred.')
         })
     },
     updateProjectDescription () {
@@ -161,14 +168,28 @@ export default {
         description: this.formData.description
       })
         .then(res => {
-          this.editing_description = false
-          this.project.description = res.data.description
+          if (res.data.is_error) {
+            alert(res.data.message)
+          } else {
+            this.editing_description = false
+            this.project.description = res.data.description
+          }
+        })
+        .catch(res => {
+          alert('Server-side error occurred.')
         })
     },
     deleteProject () {
       axios.delete(`/projects/${this.project.id}?token=${this.authToken}`)
         .then(res => {
-          this.$router.push('/dashboard')
+          if (res.data.is_error) {
+            alert(res.data.message)
+          } else {
+            this.$router.push('/dashboard')
+          }
+        })
+        .catch(res => {
+          alert('Server-side error occurred.')
         })
     },
     editTitle () {
@@ -198,8 +219,15 @@ export default {
         status,
         body: payload.body
       }).then(res => {
-        this.tasks.push(res.data)
+        if (res.data.is_error) {
+          alert(res.data.message)
+        } else {
+          this.tasks.push(res.data)
+        }
       })
+        .catch(res => {
+          alert('Server-side error occurred.')
+        })
     },
     removeTask (taskId) {
       this.tasks = this.tasks.filter(function (task) {
@@ -217,13 +245,20 @@ export default {
   created () {
     axios.get(`/projects/${this.$route.params.id}?token=${this.authToken}`)
       .then(res => {
-        this.project = res.data
-        this.formData.title = this.project.title
-        this.formData.description = this.project.description
-        axios.get(`/projects/${this.project.id}/tasks?token=${this.authToken}`)
-          .then(res2 => {
-            this.tasks = res2.data
-          })
+        if (res.data.is_error) {
+          alert(res.data.message)
+        } else {
+          this.project = res.data
+          this.formData.title = this.project.title
+          this.formData.description = this.project.description
+          axios.get(`/projects/${this.project.id}/tasks?token=${this.authToken}`)
+            .then(res2 => {
+              this.tasks = res2.data
+            })
+        }
+      })
+      .catch(res => {
+        alert('Server-side error occurred. Try again later.')
       })
   }
 }

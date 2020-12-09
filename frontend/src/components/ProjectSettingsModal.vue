@@ -55,39 +55,49 @@ export default {
         .then(res => {
           if (res.data.is_error) {
             alert(res.data.message)
-          }
-          var repeatedEmail = false
-          for (var i = 0; i < this.project.members.length; i++) {
-            if (this.project.members[i].email === res.data.email) {
-              repeatedEmail = true
-              break
+          } else {
+            var repeatedEmail = false
+            for (var i = 0; i < this.project.members.length; i++) {
+              if (this.project.members[i].email === res.data.email) {
+                repeatedEmail = true
+                break
+              }
+            }
+            if (repeatedEmail) {
+              alert('This user is already a member of this project')
+            } else {
+              document.getElementById('memberInput').value = ''
+              axios.post(`/projects/${this.project.id}/members?token=${this.authToken}`, {
+                email: res.data.email
+              })
+                .then(res2 => {
+                  if (res.data.is_error) {
+                    alert(res.data.message)
+                  } else {
+                    this.$emit('addMember', res.data)
+                  }
+                })
+                .catch(res2 => {
+                  alert('Server-side error occurred!')
+                })
             }
           }
-          if (repeatedEmail) {
-            alert('This user is already a member of this project')
-          } else {
-            document.getElementById('memberInput').value = ''
-            axios.post(`/projects/${this.project.id}/members?token=${this.authToken}`, {
-              email: res.data.email
-            })
-              .then(res2 => {
-                this.$emit('addMember', res.data)
-              })
-              .catch(res2 => {
-                console.log(res2)
-                alert('An error has occurred. Try again later')
-              })
-          }
+        })
+        .catch(res => {
+          alert('Server-side error occurred!')
         })
     },
     removeMember (email) {
       axios.delete(`/projects/${this.project.id}/members?email=${email}&token=${this.authToken}`)
         .then(res => {
-          this.$emit('removeMember', email)
+          if (res.data.is_error) {
+            alert(res.data.message)
+          } else {
+            this.$emit('removeMember', email)
+          }
         })
         .catch(res => {
-          alert('An error occurred!')
-          console.log(res)
+          alert('Server-side error occurred!')
         })
     },
     stopShowing () {

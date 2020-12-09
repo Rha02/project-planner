@@ -35,7 +35,7 @@ class ProjectController extends Controller
       if (! $project->members->contains($this->user)) {
         return response()->json([
           'is_error' => true,
-          'message' = 'You are not authorized for this action.'
+          'message' => 'You are not authorized for this action.'
         ]);
       }
 
@@ -47,7 +47,7 @@ class ProjectController extends Controller
       if ($this->user->id != $project->user_id) {
         return response()->json([
           'is_error' => true,
-          'message' = 'You are not authorized for this action.'
+          'message' => 'You are not authorized for this action.'
         ]);
       }
 
@@ -74,7 +74,7 @@ class ProjectController extends Controller
       if (! $project->members->contains($this->user)) {
         return response()->json([
           'is_error' => true,
-          'message' = 'You are not authorized for this action.'
+          'message' => 'You are not authorized for this action.'
         ]);
       }
 

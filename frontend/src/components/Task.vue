@@ -45,7 +45,14 @@ export default {
     deleteTask () {
       axios.delete(this.taskUri)
         .then(res => {
-          this.$emit('taskDeleted', this.task.id)
+          if (res.data.is_error) {
+            alert(res.data.message)
+          } else {
+            this.$emit('taskDeleted', this.task.id)
+          }
+        })
+        .catch(res => {
+          alert('Server-side error occurred!')
         })
     },
     updateTask (payload) {
@@ -54,10 +61,14 @@ export default {
         body: payload.body
       })
         .then(res => {
-          this.$emit('taskUpdated', res.data)
+          if (res.data.is_error) {
+            alert(res.data.message)
+          } else {
+            this.$emit('taskUpdated', res.data)
+          }
         })
         .catch(res => {
-          alert('An error has occured! Please try again later.')
+          alert('Server-side error occurred!')
         })
       this.editing = false
     }

@@ -41,8 +41,15 @@ export default {
   created () {
     axios.get(`/projects?token=${this.$store.state.authToken}`)
       .then(res => {
-        this.ownedProjects = res.data.ownedProjects
-        this.sharedProjects = res.data.sharedProjects
+        if (res.data.is_error) {
+          alert(res.data.message)
+        } else {
+          this.ownedProjects = res.data.ownedProjects
+          this.sharedProjects = res.data.sharedProjects
+        }
+      })
+      .catch(res => {
+        alert('Server-side error occurred!')
       })
   }
 }

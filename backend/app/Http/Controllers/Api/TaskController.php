@@ -97,7 +97,7 @@ class TaskController extends Controller
       if (! $project->members->contains($this->user)) {
         return response()->json([
           'is_error' => true,
-          'message' = 'You are not authorized for this action.'
+          'message' => 'You are not authorized for this action.'
         ]);
       }
 
