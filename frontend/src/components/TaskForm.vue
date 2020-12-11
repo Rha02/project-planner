@@ -16,21 +16,37 @@
 </template>
 
 <script>
+import axios from 'axios'
 export default {
-  props: ['statusId'],
+  props: ['status'],
   data () {
     return {
       creating_task: false,
       body: ''
     }
   },
+  computed: {
+    authToken () {
+      return this.$store.state.authToken
+    }
+  },
   methods: {
     addTask () {
-      this.$emit('addTask', {
-        body: this.body,
-        statusId: this.statusId
+      axios.post(`/projects/${this.$route.params.id}/tasks?token=${this.authToken}`, {
+        status: this.status,
+        body: this.body
       })
-      this.creating_task = false
+        .then(res => {
+          if (res.data.is_error) {
+            alert(res.data.message)
+          } else {
+            this.$emit('addTask', res.data)
+            this.creating_task = false
+          }
+        })
+        .catch(res => {
+          alert('Server-side error occurred.')
+        })
     }
   }
 }

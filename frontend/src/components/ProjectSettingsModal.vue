@@ -1,5 +1,5 @@
 <template>
-  <div v-if="showing" class="flex items-center justify-center">
+  <div class="flex items-center justify-center">
     <div class="fixed inset-0 h-full w-full opacity-75 bg-gray-900" @click="stopShowing"></div>
     <div class="px-3 py-1 fixed w-1/2 bg-gray-100 rounded-lg shadow-lg pt-1 pb-2">
       <div class="flex items-center justify-between">
@@ -41,8 +41,16 @@
 
 <script>
 import axios from 'axios'
+function ifEmailRepeats (users, email) {
+  for (var i = 0; i < users.length; i++) {
+    if (users[i].email === email) {
+      return true
+    }
+  }
+  return false
+}
 export default {
-  props: ['showing', 'project'],
+  props: ['project'],
   computed: {
     authToken () {
       return this.$store.state.authToken
@@ -56,14 +64,7 @@ export default {
           if (res.data.is_error) {
             alert(res.data.message)
           } else {
-            var repeatedEmail = false
-            for (var i = 0; i < this.project.members.length; i++) {
-              if (this.project.members[i].email === res.data.email) {
-                repeatedEmail = true
-                break
-              }
-            }
-            if (repeatedEmail) {
+            if (ifEmailRepeats(this.project.members, res.data.email)) {
               alert('This user is already a member of this project')
             } else {
               document.getElementById('memberInput').value = ''

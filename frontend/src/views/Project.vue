@@ -58,7 +58,7 @@
                 v-for="task in filteredTasks('unsigned')" :key="task.id">
             <task :task="task" @taskDeleted="removeTask" @taskUpdated="updateTask"></task>
           </div>
-          <taskform @addTask="createTask" statusId="0"></taskform>
+          <taskform @addTask="createTask" status="unsigned"></taskform>
         </div>
       </div>
       <div class="w-1/4 px-2">
@@ -70,7 +70,7 @@
                 v-for="task in filteredTasks('not_started')" :key="task.id">
             <task :task="task" @taskDeleted="removeTask" @taskUpdated="updateTask"></task>
           </div>
-          <taskform @addTask="createTask" statusId="1"></taskform>
+          <taskform @addTask="createTask" status="not_started"></taskform>
         </div>
       </div>
       <div class="w-1/4 px-2">
@@ -82,7 +82,7 @@
                 v-for="task in filteredTasks('in_progress')" :key="task.id">
             <task :task="task" @taskDeleted="removeTask" @taskUpdated="updateTask"></task>
           </div>
-          <taskform @addTask="createTask" statusId="2"></taskform>
+          <taskform @addTask="createTask" status="in_progress"></taskform>
         </div>
       </div>
       <div class="w-1/4 px-2">
@@ -94,11 +94,13 @@
                 v-for="task in filteredTasks('complete')" :key="task.id">
             <task :task="task" @taskDeleted="removeTask" @taskUpdated="updateTask"></task>
           </div>
-          <taskform @addTask="createTask" statusId="3"></taskform>
+          <taskform @addTask="createTask" status="complete"></taskform>
         </div>
       </div>
     </div>
-    <settings-modal :showing="inSettings" :project="project" @addMember="addMember" @removeMember="removeMember" @deleteProject="deleteProject" @stopShowing="inSettings = false"></settings-modal>
+    <div class="" v-if="inSettings">
+      <settings-modal :project="project" @addMember="addMember" @removeMember="removeMember" @deleteProject="deleteProject" @stopShowing="inSettings = false"></settings-modal>
+    </div>
   </div>
 </template>
 
@@ -129,6 +131,14 @@ export default {
   computed: {
     authToken () {
       return this.$store.state.authToken
+    }
+  },
+  watch: {
+    editing_title () {
+      this.formData.title = this.project.title
+    },
+    editing_description () {
+      this.formData.description = this.project.description
     }
   },
   methods: {
@@ -201,33 +211,7 @@ export default {
       this.$nextTick(() => this.$refs.description.focus())
     },
     createTask (payload) {
-      var status = 'unsigned'
-      switch (payload.statusId) {
-        case '0':
-          break
-        case '1':
-          status = 'not_started'
-          break
-        case '2':
-          status = 'in_progress'
-          break
-        case '3':
-          status = 'complete'
-          break
-      }
-      axios.post(`/projects/${this.project.id}/tasks?token=${this.authToken}`, {
-        status,
-        body: payload.body
-      }).then(res => {
-        if (res.data.is_error) {
-          alert(res.data.message)
-        } else {
-          this.tasks.push(res.data)
-        }
-      })
-        .catch(res => {
-          alert('Server-side error occurred.')
-        })
+      this.tasks.push(payload)
     },
     removeTask (taskId) {
       this.tasks = this.tasks.filter(function (task) {
@@ -249,8 +233,6 @@ export default {
           alert(res.data.message)
         } else {
           this.project = res.data
-          this.formData.title = this.project.title
-          this.formData.description = this.project.description
           axios.get(`/projects/${this.project.id}/tasks?token=${this.authToken}`)
             .then(res2 => {
               this.tasks = res2.data
