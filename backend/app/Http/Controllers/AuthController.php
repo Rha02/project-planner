@@ -30,7 +30,7 @@ class AuthController extends Controller
         return response()->json([
           'is_error' => true,
           'error' => 'Unauthorized',
-          'message' => 'The account email or password you entered are incorrect. Check your credentials and try again.'
+          'message' => 'The email or password you entered are incorrect. Check your credentials and try again.'
         ]);
       }
 

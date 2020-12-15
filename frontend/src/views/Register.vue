@@ -5,11 +5,7 @@
         <div class="text-2xl text-gray-800 text-center">
           Registration
         </div>
-        <div class="text-red-600 text-center font-semibold" v-if="has_error && !success">
-          <p v-if="error == 'registration_validation_error'">Validation Errors</p>
-          <p v-else>Error, cannot register at the momend. If the problem persists, please contact the Administrator</p>
-        </div>
-        <form class="text-center text-gray-800 space-y-4" @submit.prevent="register" method="post" v-if="!success">
+        <form class="text-center text-gray-800 space-y-4" @submit.prevent="register" method="post">
           <div class="space-y-1">
             <label for="name" class="text-lg">Name</label>
             <br>
@@ -22,21 +18,19 @@
             <br>
             <input type="email" class="bg-gray-200 hover:bg-gray-300 py-1 px-2 shadow w-3/5 rounded-lg" id="email" placeholder="Your Email" v-model="email">
             <br>
-            <span class="text-red-600 font-semibold" v-if="has_error && errors.email">{{ errors.email }}</span>
+            <span class="text-red-600 font-semibold" v-if="has_error && errors.email">{{ errors.email[0] }}</span>
           </div>
           <div class="space-y-1">
             <label for="password" class="text-lg">Password</label>
             <br>
             <input type="password" placeholder="Password" class="bg-gray-200 hover:bg-gray-300 py-1 px-2 shadow w-3/5 rounded-lg" id="password" v-model="password">
             <br>
-            <span class="text-red-600 font-semibold" v-if="has_error && errors.password">{{ errors.password }}</span>
+            <span class="text-red-600 font-semibold" v-if="has_error && errors.password">{{ errors.password[0] }}</span>
           </div>
           <div class="space-y-1">
             <label for="password_confirmation" class="text-lg">Confirm Password</label>
             <br>
             <input type="password" placeholder="Retype Password" class="bg-gray-200 hover:bg-gray-300 py-1 px-2 shadow w-3/5 rounded-lg" id="password_confirmation" v-model="password_confirmation">
-            <br>
-            <span class="text-red-600 font-semibold" v-if="has_error && errors.password_confirmation">{{ errors.password_confirmation }}</span>
           </div>
           <button type="submit" class="px-2 py-1 bg-blue-500 hover:bg-blue-600 hover:text-white text-gray-100 rounded">Register</button>
         </form>
@@ -46,6 +40,9 @@
 </template>
 
 <script>
+function sleep (ms) {
+  return new Promise(resolve => setTimeout(resolve, ms))
+}
 export default {
   data () {
     return {
@@ -54,9 +51,7 @@ export default {
       password: '',
       password_confirmation: '',
       has_error: false,
-      error: '',
-      errors: {},
-      success: false
+      errors: {}
     }
   },
   methods: {
@@ -67,7 +62,15 @@ export default {
         password: this.password,
         password_confirmation: this.password_confirmation
       }
-      this.$store.dispatch('register', formData)
+      this.$store.dispatch('register', formData).then(() => {
+        if (this.$store.state.error) {
+          sleep(500).then(() => {
+            this.has_error = true
+            this.errors = this.$store.state.error.errors
+            this.password_confirmation = ''
+          })
+        }
+      })
     }
   }
 }

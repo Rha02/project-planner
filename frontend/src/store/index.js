@@ -13,7 +13,7 @@ export default new Vuex.Store({
       name: null,
       email: null
     },
-    errors: {}
+    error: {}
   },
   getters: {
     user (state) {
@@ -41,7 +41,7 @@ export default new Vuex.Store({
       state.user.email = null
     },
     storeErrors (state, errors) {
-      state.errors = errors
+      state.error = errors
     }
   },
   actions: {
@@ -58,7 +58,7 @@ export default new Vuex.Store({
       })
         .then(res => {
           if (res.data.is_error) {
-            console.log(res.data)
+            commit('storeErrors', res.data)
           } else {
             localStorage.setItem('token', res.data.access_token)
             const now = new Date()
@@ -82,7 +82,7 @@ export default new Vuex.Store({
       })
         .then(res => {
           if (res.data.is_error) {
-            console.log(res.data)
+            commit('storeErrors', res.data)
           } else {
             localStorage.setItem('token', res.data.access_token)
             const now = new Date()
@@ -117,13 +117,13 @@ export default new Vuex.Store({
       const now = new Date()
       if (!token || now >= tokenExpiration) {
         commit('clearAuthData')
-        return
+      } else {
+        commit('authUser', {
+          token: token
+        })
+        dispatch('fetchUser')
+        router.replace('/dashboard')
       }
-      commit('authUser', {
-        token: token
-      })
-      dispatch('fetchUser')
-      router.replace('/dashboard')
     }
   },
   modules: {

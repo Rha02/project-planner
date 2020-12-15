@@ -18,7 +18,7 @@
           </div>
           <span class="text-red-600 font-semibold" v-if="has_error">{{ error }}</span>
           <br>
-          <button type="submit" class="px-2 py-1 bg-blue-500 hover:bg-blue-600 hover:text-white text-gray-100 rounded" v-bind:disabled="logging_in">Login</button>
+          <button type="submit" class="px-2 py-1 bg-blue-500 hover:bg-blue-600 hover:text-white text-gray-100 rounded">Login</button>
         </form>
         <br>
       </div>
@@ -30,7 +30,6 @@
 export default {
   data () {
     return {
-      logging_in: false,
       email: '',
       password: '',
       has_error: false,
@@ -44,11 +43,14 @@ export default {
         email: this.email,
         password: this.password
       }
-      this.$store.dispatch('login', formData).then(() => {
+      this.$store.dispatch('login', formData)
+      if (this.$store.state.error) {
         this.has_error = true
-        this.error = 'The email or password you entered are incorrect. Check your credentials and try again.'
-      })
-      this.logging_in = false
+        while (!this.error) {
+          this.error = this.$store.state.error.message
+        }
+        this.password = ''
+      }
     }
   }
 }
