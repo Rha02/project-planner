@@ -27,6 +27,9 @@
 </template>
 
 <script>
+function sleep (ms) {
+  return new Promise(resolve => setTimeout(resolve, ms))
+}
 export default {
   data () {
     return {
@@ -46,9 +49,10 @@ export default {
       this.$store.dispatch('login', formData)
       if (this.$store.state.error) {
         this.has_error = true
-        while (!this.error) {
-          this.error = this.$store.state.error.message
-        }
+        sleep(500).then(() => {
+          this.error = this.$store.state.error.errors
+          console.log('error')
+        })
         this.password = ''
       }
     }

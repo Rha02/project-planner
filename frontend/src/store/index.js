@@ -72,6 +72,10 @@ export default new Vuex.Store({
             router.replace('/dashboard')
           }
         })
+        .catch(res => {
+          alert('Server-side Error occurred. Try again later.')
+          commit('storeErrors', res)
+        })
     },
     register ({ commit, dispatch }, data) {
       axios.post('/register', {
