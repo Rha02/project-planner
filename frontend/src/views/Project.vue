@@ -12,7 +12,7 @@
           </button>
         </span>
       </div>
-      <div class="text-2xl text-gray-200 hover:text-gray-700" v-else>
+      <div class="text-2xl text-gray-700 lg:text-gray-200 hover:text-gray-700" v-else>
         <span class="text-gray-900">{{ project.title }}</span>
         <span class="ml-1 text-lg">
           <button type="button" @click="editTitle()" class="px-1 hover:bg-gray-400 hover:text-purple-700 rounded-lg transition ease-in-out duration-150">
@@ -26,30 +26,32 @@
         </button>
       </div>
     </div>
-    <div class="text-gray-700 mt-1" v-if="editing_description">
-      <textarea class="text-gray-900 bg-gray-200 w-2/3 px-1" ref="description" v-model="formData.description"></textarea>
-      <span class="ml-1">
-        <button type="button" @click="editing_description = false" class="px-2 hover:bg-red-600 rounded-lg hover:text-white transition ease-in-out duration-150">
-          <i class="fas fa-times"></i>
-        </button>
-        <button type="button" @click="updateProjectDescription()" class="px-1 hover:bg-green-600 rounded-lg hover:text-white transition ease-in-out duration-150">
-          <i class="fas fa-check"></i>
-        </button>
-      </span>
-    </div>
-    <div class="text-gray-200 hover:text-gray-700 mt-1" v-else>
-      <span class="text-gray-800">{{ project.description }}</span>
-      <span class="ml-1">
-        <button type="button" @click="editDescription()" class="px-1 hover:bg-gray-400 rounded-lg hover:text-purple-700 transition ease-in-out duration-150">
-          <i class="fas fa-pen"></i>
-        </button>
-      </span>
+    <div class="mx-2 md:mx-1 lg:mx-0">
+      <div class="text-gray-700 mt-1" v-if="editing_description">
+        <textarea class="text-gray-900 bg-gray-200 w-2/3 px-1" ref="description" v-model="formData.description"></textarea>
+        <span class="ml-1">
+          <button type="button" @click="editing_description = false" class="px-2 hover:bg-red-600 rounded-lg hover:text-white transition ease-in-out duration-150">
+            <i class="fas fa-times"></i>
+          </button>
+          <button type="button" @click="updateProjectDescription()" class="px-1 hover:bg-green-600 rounded-lg hover:text-white transition ease-in-out duration-150">
+            <i class="fas fa-check"></i>
+          </button>
+        </span>
+      </div>
+      <div class="text-gray-700 lg:text-gray-200 hover:text-gray-700 mt-1" v-else>
+        <span class="text-gray-800">{{ project.description }}</span>
+        <span class="ml-1">
+          <button type="button" @click="editDescription()" class="px-1 hover:bg-gray-400 rounded-lg hover:text-purple-700 transition ease-in-out duration-150">
+            <i class="fas fa-pen"></i>
+          </button>
+        </span>
+      </div>
     </div>
     <div class="mt-4 text-xl text-center font-semibold">
       Tasks: {{ tasks.length }}
     </div>
     <div class="flex flex-wrap -mb-4 mt-2">
-      <div class="w-1/4 px-2">
+      <div class="w-full md:w-1/2 lg:w-1/4 px-2">
         <div class="pb-4">
           <div class="text-lg text-center text-gray-800 font-semibold pt-2">
             No Status
@@ -61,7 +63,7 @@
           <taskform @addTask="createTask" status="unsigned"></taskform>
         </div>
       </div>
-      <div class="w-1/4 px-2">
+      <div class="w-full md:w-1/2 lg:w-1/4 px-2">
         <div class="pb-4">
           <div class="text-lg text-center text-gray-800 font-semibold pt-2">
             Not Started
@@ -73,7 +75,7 @@
           <taskform @addTask="createTask" status="not_started"></taskform>
         </div>
       </div>
-      <div class="w-1/4 px-2">
+      <div class="w-full md:w-1/2 lg:w-1/4 px-2">
         <div class="pb-4">
           <div class="text-lg text-center text-gray-800 font-semibold pt-2">
             In Progress
@@ -85,7 +87,7 @@
           <taskform @addTask="createTask" status="in_progress"></taskform>
         </div>
       </div>
-      <div class="w-1/4 px-2">
+      <div class="w-full md:w-1/2 lg:w-1/4 px-2">
         <div class="pb-4">
           <div class="text-lg text-center text-gray-800 font-semibold pt-2">
             Completed

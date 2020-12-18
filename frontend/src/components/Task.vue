@@ -1,6 +1,6 @@
 <template>
   <div class="">
-    <div class="text-white hover:text-gray-800 shadow-lg rounded-md text-lg bg-gray-100 mx-2 my-3 py-1 px-2 items-center">
+    <div class="text-gray-700 lg:text-white hover:text-gray-700 shadow-lg rounded-md text-lg bg-gray-100 mx-2 my-3 py-1 px-2 items-center">
       <div class="w-full text-gray-800 overflow-auto">
         {{ task.body }}
       </div>

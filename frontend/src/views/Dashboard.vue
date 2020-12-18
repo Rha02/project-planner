@@ -1,5 +1,5 @@
 <template>
-  <div class="container mx-auto justify-center mt-4 text-gray-900">
+  <div class="mx-4 md:container md:mx-auto mt-4 text-gray-900">
     <div class="" v-if="ownedProjects.length">
       <div class="w-full py-2 text-center text-2xl text-gray-800 border-b-2 border-gray-600 font-semibold">
         Your Projects

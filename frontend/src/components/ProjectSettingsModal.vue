@@ -1,7 +1,7 @@
 <template>
-  <div class="flex items-center justify-center">
+  <div class="absolute inset-0 flex items-center justify-center">
     <div class="fixed inset-0 h-full w-full opacity-75 bg-gray-900" @click="stopShowing"></div>
-    <div class="px-3 py-1 fixed w-1/2 bg-gray-100 rounded-lg shadow-lg pt-1 pb-2">
+    <div class="px-3 py-1 fixed w-4/5 md:w-3/5 lg:w-1/2 bg-gray-100 rounded-lg shadow-lg pt-1 pb-2">
       <div class="flex items-center justify-between">
         <div class="px-2 text-gray-100 text-xl"></div> <!--Div block in order to take space on left-->
         <div class="text-2xl font-semibold text-center text-gray-800">

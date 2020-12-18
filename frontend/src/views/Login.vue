@@ -9,12 +9,12 @@
           <div class="space-y-1">
             <label for="email" class="text-lg">Email</label>
             <br>
-            <input type="email" class="bg-gray-200 hover:bg-gray-300 py-1 px-2 shadow w-3/5 rounded-lg" id="email" placeholder="Your Email" v-model="email">
+            <input type="email" class="bg-gray-200 hover:bg-gray-300 py-1 px-2 shadow w-4/5 lg:w-3/5 rounded-lg" id="email" placeholder="Your Email" v-model="email">
           </div>
           <div class="space-y-1">
             <label for="password" class="text-lg">Password</label>
             <br>
-            <input type="password" placeholder="Password" class="bg-gray-200 hover:bg-gray-300 py-1 px-2 shadow w-3/5 rounded-lg" id="password" v-model="password">
+            <input type="password" placeholder="Password" class="bg-gray-200 hover:bg-gray-300 py-1 px-2 shadow w-4/5 lg:w-3/5 rounded-lg" id="password" v-model="password">
           </div>
           <span class="text-red-600 font-semibold" v-if="has_error">{{ error }}</span>
           <br>
@@ -50,7 +50,7 @@ export default {
       if (this.$store.state.error) {
         this.has_error = true
         sleep(500).then(() => {
-          this.error = this.$store.state.error.errors
+          this.error = this.$store.state.error.message
           console.log('error')
         })
         this.password = ''

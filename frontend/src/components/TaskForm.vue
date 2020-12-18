@@ -6,7 +6,7 @@
       </button>
     </div>
     <div class="text-center text-lg" v-else>
-      <textarea type="text" rows="4" cols="22" class="mt-2 bg-gray-300 rounded-md px-2 py-1" v-model="body"></textarea>
+      <textarea type="text" rows="4" class="mt-2 w-3/4 bg-gray-300 rounded-md px-2 py-1" v-model="body"></textarea>
       <div class="flex justify-between px-1 py-1">
         <button type="button" class="px-2 py-1" @click="creating_task = false">Cancel</button>
         <button type="button" @click="addTask" class="bg-blue-600 text-white hover:bg-blue-500 px-2 py-1 rounded-md transition ease-in-out duration-150">Add</button>
