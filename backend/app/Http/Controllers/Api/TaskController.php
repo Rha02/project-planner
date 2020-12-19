@@ -32,7 +32,7 @@ class TaskController extends Controller
       $this->authorized($project);
 
       $validator = Validator::make(request()->all(), [
-        'user_id' => 'nullable|exists:App\Models\User,id',
+        'user_id' => ['nullable', 'exists:App\Models\User,id', Rule::in($project->members->pluck('id'))],
         'body' => 'required|string|max:3000',
         'status' => ['nullable', Rule::in(['unsigned', 'not_started', 'in_progress', 'complete'])]
       ]);
@@ -71,7 +71,7 @@ class TaskController extends Controller
       $this->authorized($project);
 
       $validator = Validator::make(request()->all(), [
-        'user_id' => 'nullable|exists:App\Models\User,id',
+        'user_id' => ['nullable', 'exists:App\Models\User,id', Rule::in($project->members->pluck('id'))],
         'body' => 'required|string|max:3000',
         'status' => ['nullable', Rule::in(['unsigned', 'not_started', 'in_progress', 'complete'])]
       ]);

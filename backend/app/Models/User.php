@@ -8,6 +8,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 use App\Models\Project;
+use App\Models\Task;
 
 class User extends Authenticatable implements JWTSubject
 {
@@ -61,5 +62,10 @@ class User extends Authenticatable implements JWTSubject
     public function sharedProjects()
     {
       return $this->belongsToMany(Project::class);
+    }
+
+    public function assignedTasks()
+    {
+      return $this->hasMany(Task::class);
     }
 }

@@ -42,4 +42,6 @@ Route::middleware('auth:api')->group(function ($router) {
   Route::delete('/projects/{project}/members', [App\Http\Controllers\Api\ProjectUserController::class, 'destroy']);
 
   Route::get('/users', [App\Http\Controllers\Api\UserController::class, 'show']);
+
+  Route::get('/user/tasks', [App\Http\Controllers\Api\UserTaskController::class, 'index']);
 });

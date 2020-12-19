@@ -73,6 +73,17 @@ class ProjectUserController extends Controller
         ]);
       }
 
+      $member->assignedTasks->each(function ($task) use ($project) {
+        if ($task->project_id == $project->id) {
+          $task->update([
+            'project_id' => $task->project_id,
+            'body' => $task->body,
+            'status' => $task->status,
+            'user_id' => null
+          ]);
+        }
+      });
+
       $project->members()->detach($member->id);
 
       return 'Success';
