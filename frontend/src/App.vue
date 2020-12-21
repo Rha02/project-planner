@@ -2,9 +2,12 @@
     <div class="">
             <nav class="bg-gray-800 text-gray-300 text-lg">
               <div class="container mx-auto flex justify-between py-2">
-                <ul>
+                <ul class="flex">
                   <li class="hover:bg-gray-700 hover:text-white py-1 rounded-lg">
                       <router-link to="/dashboard" class="px-2 py-1">Home</router-link>
+                  </li>
+                  <li class="hover:bg-gray-700 hover:text-white py-1 rounded-lg">
+                      <router-link to="/projects" class="px-2 py-1">Your Projects</router-link>
                   </li>
                 </ul>
                 <ul class="flex" v-if="! isAuth">

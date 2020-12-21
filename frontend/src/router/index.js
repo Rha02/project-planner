@@ -1,10 +1,10 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 
-import Home from '../views/Home.vue'
+import TasksDashboard from '../views/TasksDashboard.vue'
 import Login from '../views/Login.vue'
 import Register from '../views/Register.vue'
-import Dashboard from '../views/Dashboard.vue'
+import ProjectsDashboard from '../views/ProjectsDashboard.vue'
 import Project from '../views/Project.vue'
 
 import store from '../store'
@@ -13,9 +13,16 @@ Vue.use(VueRouter)
 
 const routes = [
   {
-    path: '/',
-    name: 'Home',
-    component: Home
+    path: '/dashboard',
+    name: 'TasksDashboard',
+    component: TasksDashboard,
+    beforeEnter (to, from, next) {
+      if (store.state.authToken) {
+        next()
+      } else {
+        next('/login')
+      }
+    }
   },
   {
     path: '/login',
@@ -28,9 +35,9 @@ const routes = [
     component: Register
   },
   {
-    path: '/dashboard',
+    path: '/projects',
     name: 'Dashboard',
-    component: Dashboard,
+    component: ProjectsDashboard,
     beforeEnter (to, from, next) {
       if (store.state.authToken) {
         next()
