@@ -4,6 +4,9 @@
       <div class="w-full text-gray-800 overflow-auto">
         {{ task.body }}
       </div>
+      <div class="text-gray-700 mt-1">
+        <span class="font-semibold">Assignee:</span> {{ assignedUser }}
+      </div>
       <div class="flex justify-between">
         <div class="text-center hover:text-red-700 transition ease-in-out duration-150">
           <button type="button" class="px-1" @click="deleteTask">
@@ -18,7 +21,7 @@
       </div>
     </div>
     <div class="" v-if="editing">
-      <task-edit-modal :task="task" @stopShowing="editing = false" @updateTask="updateTask"></task-edit-modal>
+      <task-edit-modal :task="task" :project="project" @stopShowing="editing = false" @updateTask="updateTask"></task-edit-modal>
     </div>
   </div>
 </template>
@@ -27,7 +30,7 @@
 import TaskEditModal from '../components/TaskEditModal.vue'
 import axios from 'axios'
 export default {
-  props: ['task'],
+  props: ['task', 'project'],
   components: {
     taskEditModal: TaskEditModal
   },
@@ -39,6 +42,14 @@ export default {
   computed: {
     taskUri () {
       return `/projects/${this.$route.params.id}/tasks/${this.task.id}?token=${this.$store.state.authToken}`
+    },
+    assignedUser () {
+      for (var i = 0; i < this.project.members.length; i++) {
+        if (this.project.members[i].id === this.task.user_id) {
+          return this.project.members[i].email
+        }
+      }
+      return 'Nobody'
     }
   },
   methods: {
@@ -58,7 +69,8 @@ export default {
     updateTask (payload) {
       axios.patch(this.taskUri, {
         status: payload.status,
-        body: payload.body
+        body: payload.body,
+        user_id: payload.user_id
       })
         .then(res => {
           if (res.data.is_error) {

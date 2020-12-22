@@ -58,7 +58,7 @@
           </div>
           <div class=""
                 v-for="task in filteredTasks('unsigned')" :key="task.id">
-            <task :task="task" @taskDeleted="removeTask" @taskUpdated="updateTask"></task>
+            <task :task="task" :project="project" @taskDeleted="removeTask" @taskUpdated="updateTask"></task>
           </div>
           <taskform @addTask="createTask" status="unsigned"></taskform>
         </div>
@@ -70,7 +70,7 @@
           </div>
           <div class=""
                 v-for="task in filteredTasks('not_started')" :key="task.id">
-            <task :task="task" @taskDeleted="removeTask" @taskUpdated="updateTask"></task>
+            <task :task="task" :project="project" @taskDeleted="removeTask" @taskUpdated="updateTask"></task>
           </div>
           <taskform @addTask="createTask" status="not_started"></taskform>
         </div>
@@ -82,7 +82,7 @@
           </div>
           <div class=""
                 v-for="task in filteredTasks('in_progress')" :key="task.id">
-            <task :task="task" @taskDeleted="removeTask" @taskUpdated="updateTask"></task>
+            <task :task="task" :project="project" @taskDeleted="removeTask" @taskUpdated="updateTask"></task>
           </div>
           <taskform @addTask="createTask" status="in_progress"></taskform>
         </div>
@@ -94,7 +94,7 @@
           </div>
           <div class=""
                 v-for="task in filteredTasks('complete')" :key="task.id">
-            <task :task="task" @taskDeleted="removeTask" @taskUpdated="updateTask"></task>
+            <task :task="task" :project="project" @taskDeleted="removeTask" @taskUpdated="updateTask"></task>
           </div>
           <taskform @addTask="createTask" status="complete"></taskform>
         </div>

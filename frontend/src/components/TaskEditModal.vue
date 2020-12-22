@@ -24,8 +24,15 @@
         <option value="in_progress">In Progress</option>
         <option value="complete">Completed</option>
       </select>
+      <div class="mt-1 text-xl text-gray-800">
+        Assign to:
+      </div>
+      <select class="mt-2 bg-gray-300 rounded-md px-2 py-1" v-model="formData.user_id">
+        <option :value="null">Unassigned</option>
+        <option v-for="member in project.members" :key="member.id" :value="member.id">{{ member.email }}</option>
+      </select>
       <div class="text-center">
-          <button type="button" @click="updateTask()" class="mx-1 px-2 py-1 font-semibold rounded bg-blue-600 hover:bg-blue-500 text-white transition ease-in-out duration-150">Update</button>
+        <button type="button" @click="updateTask()" class="mx-1 px-2 py-1 font-semibold rounded bg-blue-600 hover:bg-blue-500 text-white transition ease-in-out duration-150">Update</button>
       </div>
     </div>
   </div>
@@ -33,12 +40,13 @@
 
 <script>
 export default {
-  props: ['task'],
+  props: ['task', 'project'],
   data () {
     return {
       formData: {
         body: '',
-        status: ''
+        status: '',
+        user_id: null
       }
     }
   },
@@ -53,6 +61,7 @@ export default {
   created () {
     this.formData.body = this.task.body
     this.formData.status = this.task.status
+    this.formData.user_id = this.task.user_id
   }
 }
 </script>
