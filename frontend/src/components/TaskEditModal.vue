@@ -31,7 +31,7 @@
         <option :value="null">Unassigned</option>
         <option v-for="member in project.members" :key="member.id" :value="member.id">{{ member.email }}</option>
       </select>
-      <div class="text-center">
+      <div class="text-center text-lg">
         <button type="button" @click="updateTask()" class="mx-1 px-2 py-1 font-semibold rounded bg-blue-600 hover:bg-blue-500 text-white transition ease-in-out duration-150">Update</button>
       </div>
     </div>

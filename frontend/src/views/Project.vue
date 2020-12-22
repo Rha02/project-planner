@@ -60,7 +60,7 @@
                 v-for="task in filteredTasks('unsigned')" :key="task.id">
             <task :task="task" :project="project" @taskDeleted="removeTask" @taskUpdated="updateTask"></task>
           </div>
-          <taskform @addTask="createTask" status="unsigned"></taskform>
+          <taskform @addTask="createTask" status="unsigned" :project="project"></taskform>
         </div>
       </div>
       <div class="w-full md:w-1/2 lg:w-1/4 px-2">
@@ -72,7 +72,7 @@
                 v-for="task in filteredTasks('not_started')" :key="task.id">
             <task :task="task" :project="project" @taskDeleted="removeTask" @taskUpdated="updateTask"></task>
           </div>
-          <taskform @addTask="createTask" status="not_started"></taskform>
+          <taskform @addTask="createTask" status="not_started" :project="project"></taskform>
         </div>
       </div>
       <div class="w-full md:w-1/2 lg:w-1/4 px-2">
@@ -84,7 +84,7 @@
                 v-for="task in filteredTasks('in_progress')" :key="task.id">
             <task :task="task" :project="project" @taskDeleted="removeTask" @taskUpdated="updateTask"></task>
           </div>
-          <taskform @addTask="createTask" status="in_progress"></taskform>
+          <taskform @addTask="createTask" status="in_progress" :project="project"></taskform>
         </div>
       </div>
       <div class="w-full md:w-1/2 lg:w-1/4 px-2">
@@ -96,7 +96,7 @@
                 v-for="task in filteredTasks('complete')" :key="task.id">
             <task :task="task" :project="project" @taskDeleted="removeTask" @taskUpdated="updateTask"></task>
           </div>
-          <taskform @addTask="createTask" status="complete"></taskform>
+          <taskform @addTask="createTask" status="complete" :project="project"></taskform>
         </div>
       </div>
     </div>
@@ -107,13 +107,13 @@
 </template>
 
 <script>
-import TaskForm from '../components/TaskForm.vue'
+import TaskFormModal from '../components/TaskFormModal.vue'
 import Task from '../components/Task.vue'
 import ProjectSettingsModal from '../components/ProjectSettingsModal.vue'
 import axios from 'axios'
 export default {
   components: {
-    taskform: TaskForm,
+    taskform: TaskFormModal,
     task: Task,
     settingsModal: ProjectSettingsModal
   },
