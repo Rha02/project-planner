@@ -1,13 +1,18 @@
 <template>
     <div class="">
             <nav class="bg-gray-800 text-gray-300 text-lg">
-              <div class="container mx-auto flex justify-between py-2">
+              <div class="container mx-auto flex justify-between py-2 px-1">
                 <ul class="flex">
-                  <li class="hover:bg-gray-700 hover:text-white py-1 rounded-lg">
+                  <li class="hover:bg-gray-700 hover:text-white py-1 rounded-lg hidden lg:block">
                       <router-link to="/dashboard" class="px-2 py-1">Home</router-link>
                   </li>
-                  <li class="hover:bg-gray-700 hover:text-white py-1 rounded-lg">
+                  <li class="hover:bg-gray-700 hover:text-white py-1 rounded-lg hidden lg:block">
                       <router-link to="/projects" class="px-2 py-1">Your Projects</router-link>
+                  </li>
+                  <li class="hover:bg-gray-700 hover:text-white py-1 rounded-lg block lg:hidden">
+                      <button class="px-2" @click="isMenuOpen = !isMenuOpen">
+                        <i class="fas fa-bars"></i>
+                      </button>
                   </li>
                 </ul>
                 <ul class="flex" v-if="! isAuth">
@@ -28,6 +33,17 @@
                 </ul>
               </div>
             </nav>
+            <div class="block lg:hidden" v-if="isMenuOpen">
+              <a href="#" @click.prevent="goToDashboard()" class="bg-gray-800 hover:bg-gray-700 block text-gray-200 text-lg px-2 py-1 border-t-2 border-gray-900">
+                Home
+              </a>
+              <a href="#" @click.prevent="goToProjects()" class="bg-gray-800 hover:bg-gray-700 block text-gray-200 text-lg px-2 py-1 border-t-2 border-gray-900" v-if="isAuth">
+                Your Projects
+              </a>
+              <a href="#" @click.prevent="createProject" class="bg-gray-800 hover:bg-gray-700 block text-gray-200 text-lg px-2 py-1 border-t-2 border-gray-900" v-if="isAuth">
+                Create a Project
+              </a>
+            </div>
         <div class="">
             <router-view></router-view>
         </div>
@@ -38,6 +54,11 @@
 import router from './router/'
 import axios from 'axios'
 export default {
+  data () {
+    return {
+      isMenuOpen: false
+    }
+  },
   computed: {
     isAuth () {
       return this.$store.getters.isAuthenticated
@@ -54,11 +75,20 @@ export default {
             alert('An error has occured. Please try again later.')
           } else {
             router.replace(`/projects/${res.data.id}`)
+            this.isMenuOpen = false
           }
         })
         .catch(res => {
           alert('An internal server error occurred! Please try again later.')
         })
+    },
+    goToProjects () {
+      router.replace('/projects')
+      this.isMenuOpen = false
+    },
+    goToDashboard () {
+      router.replace('/dashboard')
+      this.isMenuOpen = false
     }
   }
 }
