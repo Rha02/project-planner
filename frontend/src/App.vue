@@ -25,10 +25,13 @@
                 </ul>
                 <ul class="flex" v-if="isAuth">
                     <li class="py-1 rounded-lg hover:bg-gray-700 hover:text-white">
-                        <button @click.prevent="createProject" class="px-2">Create a Project</button>
+                        <button @click.prevent="createProject()" class="px-2">Create a Project</button>
                     </li>
                     <li class="px-2 py-1 rounded-lg">
                         {{ user.name }}
+                    </li>
+                    <li class="py-1 rounded-lg hover:bg-gray-700 hover:text-white hidden lg:block">
+                        <button @click.prevent="logout()" class="px-2">Sign out</button>
                     </li>
                 </ul>
               </div>
@@ -40,8 +43,11 @@
               <a href="#" @click.prevent="goToProjects()" class="bg-gray-800 hover:bg-gray-700 block text-gray-200 text-lg px-2 py-1 border-t-2 border-gray-900" v-if="isAuth">
                 Your Projects
               </a>
-              <a href="#" @click.prevent="createProject" class="bg-gray-800 hover:bg-gray-700 block text-gray-200 text-lg px-2 py-1 border-t-2 border-gray-900" v-if="isAuth">
+              <a href="#" @click.prevent="createProject()" class="bg-gray-800 hover:bg-gray-700 block text-gray-200 text-lg px-2 py-1 border-t-2 border-gray-900" v-if="isAuth">
                 Create a Project
+              </a>
+              <a href="#" @click.prevent="logout()" class="bg-gray-800 hover:bg-gray-700 block text-gray-200 text-lg px-2 py-1 border-t-2 border-gray-900" v-if="isAuth">
+                Sign out
               </a>
             </div>
         <div class="">
@@ -88,6 +94,10 @@ export default {
     },
     goToDashboard () {
       router.replace('/dashboard')
+      this.isMenuOpen = false
+    },
+    logout () {
+      this.$store.dispatch('logout')
       this.isMenuOpen = false
     }
   }

@@ -13,6 +13,18 @@ Vue.use(VueRouter)
 
 const routes = [
   {
+    path: '/',
+    name: '',
+    component: null,
+    beforeEnter (to, from, next) {
+      if (store.state.authToken) {
+        next('/dashboard')
+      } else {
+        next('/login')
+      }
+    }
+  },
+  {
     path: '/dashboard',
     name: 'TasksDashboard',
     component: TasksDashboard,

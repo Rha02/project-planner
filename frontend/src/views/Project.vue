@@ -197,7 +197,7 @@ export default {
           if (res.data.is_error) {
             alert(res.data.message)
           } else {
-            this.$router.push('/dashboard')
+            this.$router.push('/projects')
           }
         })
         .catch(res => {
