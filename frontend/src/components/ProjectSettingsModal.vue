@@ -20,19 +20,23 @@
         </li>
         <li v-for="member in this.project.members.slice(1)" :key="member.name">
           {{ member.email }}
-          <button @click="removeMember(member.email)" class="px-1 text-gray-800 hover:text-red-700 transition ease-in-out duration-150"><i class="fas fa-times"></i></button>
+          <button @click="removeMember(member.email)" class="px-1 text-gray-800 hover:text-red-700 transition ease-in-out duration-150" v-if="isOwner">
+            <i class="fas fa-times"></i>
+          </button>
         </li>
       </ul>
-      <div class="mt-2 text-gray-800 text-lg font-semibold">
-        Add a Member:
+      <div class="" v-if="isOwner">
+        <div class="mt-2 text-gray-800 text-lg font-semibold">
+          Add a Member:
+        </div>
+        <div class="">
+          <input type="email" id="memberInput" class="bg-gray-300 rounded px-1" placeholder="Type user email">
+          <button type="button" @click="addMember()" class="px-1 ml-1 rounded bg-blue-600 hover:bg-blue-500 text-white transition ease-in-out duration-150">
+            <i class="fas fa-plus"></i>
+          </button>
+        </div>
       </div>
-      <div class="">
-        <input type="email" id="memberInput" class="bg-gray-300 rounded px-1" placeholder="Type user email">
-        <button type="button" @click="addMember()" class="px-1 ml-1 rounded bg-blue-600 hover:bg-blue-500 text-white transition ease-in-out duration-150">
-          <i class="fas fa-plus"></i>
-        </button>
-      </div>
-      <div class="flex flex-row-reverse">
+      <div class="flex flex-row-reverse" v-if="isOwner">
           <button type="button" @click="deleteProject()" class="mx-1 px-2 py-1 font-semibold rounded border border-red-600 hover:bg-red-600 text-red-600 hover:text-white transition ease-in-out duration-150">Delete</button>
       </div>
     </div>
@@ -51,9 +55,19 @@ function ifEmailRepeats (users, email) {
 }
 export default {
   props: ['project'],
+  data () {
+    return {
+      isOwner: false
+    }
+  },
   computed: {
     authToken () {
       return this.$store.state.authToken
+    }
+  },
+  created () {
+    if (this.project.members[0].email === this.$store.state.user.email) {
+      this.isOwner = true
     }
   },
   methods: {

@@ -21,9 +21,6 @@ export default new Vuex.Store({
     },
     isAuthenticated (state) {
       return state.authToken !== null
-    },
-    projects (state) {
-      return state.projects
     }
   },
   mutations: {
