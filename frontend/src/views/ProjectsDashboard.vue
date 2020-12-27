@@ -22,6 +22,11 @@
         </div>
       </div>
     </div>
+    <div class="" v-if="!sharedProjects.length && !ownedProjects.length">
+      <div class="w-full py-2 text-center text-xl text-gray-800 font-semibold">
+        You don't have any projects. Get started by creating one.
+      </div>
+    </div>
   </div>
 </template>
 

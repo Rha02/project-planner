@@ -24,7 +24,7 @@
                     </li>
                 </ul>
                 <ul class="flex" v-if="isAuth">
-                    <li class="py-1 rounded-lg hover:bg-gray-700 hover:text-white">
+                    <li class="py-1 rounded-lg hover:bg-gray-700 hover:text-white hidden lg:block">
                         <button @click.prevent="createProject()" class="px-2">Create a Project</button>
                     </li>
                     <li class="px-2 py-1 rounded-lg">

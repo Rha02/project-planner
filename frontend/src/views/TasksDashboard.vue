@@ -11,6 +11,9 @@
             <div class="" v-for="task in filteredTasks('unsigned')" :key="task.id">
               <task :task="task"></task>
             </div>
+            <div class="text-center text-gray-700 text-lg font-semibold" v-if="!filteredTasks('unsigned').length">
+              You don't have any tasks without a status.
+            </div>
           </div>
         </div>
       </div>
@@ -23,6 +26,9 @@
             <div class="" v-for="task in filteredTasks('not_started')" :key="task.id">
               <task :task="task"></task>
             </div>
+            <div class="text-center text-gray-700 text-lg font-semibold" v-if="!filteredTasks('not_started').length">
+              You don't have any tasks that aren't started.
+            </div>
           </div>
         </div>
       </div>
@@ -34,6 +40,9 @@
           <div class="my-2 space-y-2">
             <div class="" v-for="task in filteredTasks('in_progress')" :key="task.id">
               <task :task="task"></task>
+            </div>
+            <div class="text-center text-gray-700 text-lg font-semibold" v-if="!filteredTasks('unsigned').length">
+              You don't have any tasks in progress.
             </div>
           </div>
         </div>
@@ -59,7 +68,7 @@ export default {
   },
   computed: {
     tasksExist () {
-      if (this.tasks.length > this.filteredTasks('complete')) {
+      if (this.tasks.length > this.filteredTasks('complete').length) {
         return true
       }
       return false
@@ -75,6 +84,7 @@ export default {
   created () {
     axios.get(`/user/tasks?token=${this.$store.state.authToken}`)
       .then(res => {
+        console.log(res.data)
         this.tasks = res.data
       })
   }
