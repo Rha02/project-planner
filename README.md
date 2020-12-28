@@ -29,12 +29,13 @@ Team member:
 2) Can create tasks, update them, or delete them.
 3) Can view the list of members in the project (Only view!)
 
+The leaders and the members can assign the task to someone, as long as that someone is in the team! If that person is removed from the team, the tasks assigned to them will change it's assigned user to "Nobody"
 In the list of members, the users can tell who the project leader is by looking at the crown that's next to the name of the leader.
 
 ## Security/Privacy
-After creating a project, only the creator has access to view and modify it. The project is restricted from viewing or modifying for any other person, unless the creator shared the project with them.
+After creating a project, only the creator has access to view and modify it. The project is restricted from viewing or modifying for any other person, unless the creator shared the project with them. Removing members from the team restricts them from accessing the project. Only the people that users chooses can access the project.
 
 ## Packages installed:
-**Tailwind CSS** - for easier and prettier web design
+**Tailwind CSS** - for a nice-looking web design
 
 **jwt-auth** - creating a secure connection between the backend and the frontend
