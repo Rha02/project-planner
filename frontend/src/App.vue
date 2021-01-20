@@ -1,6 +1,6 @@
 <template>
     <div class="">
-            <nav class="bg-gray-800 text-gray-300 text-lg">
+            <!--<nav class="bg-gray-800 text-gray-300 text-lg">
               <div class="container mx-auto flex justify-between py-2 px-1">
                 <ul class="flex">
                   <li class="hover:bg-gray-700 hover:text-white py-1 rounded-lg hidden lg:block">
@@ -35,7 +35,7 @@
                     </li>
                 </ul>
               </div>
-            </nav>
+            </nav>-->
             <div class="block lg:hidden" v-if="isMenuOpen">
               <a href="#" @click.prevent="goToDashboard()" class="bg-gray-800 hover:bg-gray-700 block text-gray-200 text-lg px-2 py-1 border-t-2 border-gray-900">
                 Home
@@ -50,7 +50,7 @@
                 Sign out
               </a>
             </div>
-        <div class="">
+        <div class="w-full max-w-8xl mx-auto">
             <router-view></router-view>
         </div>
     </div>
