@@ -12,8 +12,6 @@ class Project extends Model
 
     protected $fillable = ['user_id', 'title', 'description'];
 
-    protected $with = ['members'];
-
     public function tasks()
     {
       return $this->hasMany(Task::class);

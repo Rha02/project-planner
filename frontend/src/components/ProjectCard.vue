@@ -11,7 +11,7 @@
       {{ project.members.length }} <span class="fas fa-user-friends"></span>
       </div>
     </div>
-    <div class="text-gray-600 font-semibold">
+    <div class="text-gray-800">
       {{ project.description ? project.description : 'No description' }}
     </div>
   </div>

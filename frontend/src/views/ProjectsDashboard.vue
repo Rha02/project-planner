@@ -1,10 +1,15 @@
 <template>
-  <div class="mx-4 md:container md:mx-auto mt-4 text-gray-900">
+  <div class="container bg-gray-200">
     <div class="" v-if="ownedProjects.length">
-      <div class="w-full py-2 text-center text-2xl text-gray-800 border-b-2 border-gray-600 font-semibold">
-        Your Projects
+      <div class="bg-gray-100 shadow">
+        <div class="mx-8 py-3">
+          <div class="text-gray-900 text-2xl font-semibold">Projects</div>
+        </div>
       </div>
-      <div class="mt-2 space-y-4">
+      <div class="mx-8 my-2 text-xl font-semibold text-gray-900">
+        Your Projects:
+      </div>
+      <div class="mx-8 space-y-2">
         <div class="px-3 py-3 w-full rounded-lg overflow-hidden shadow-lg transition-shadow duration-150 hover:shadow-xl border-gray-300 bg-gray-100"
           v-for="project in ownedProjects" :key="project.id">
           <project :project="project"></project>
@@ -12,10 +17,10 @@
       </div>
     </div>
     <div class="" v-if="sharedProjects.length">
-      <div class="w-full mt-4 py-2 text-center text-2xl text-gray-800 border-b-2 border-gray-600 font-semibold">
+      <div class="mx-8 my-2 text-xl font-semibold text-gray-900">
         Shared Projects
       </div>
-      <div class="mt-2 space-y-4">
+      <div class="mx-8 space-y-2">
         <div class="px-3 py-3 w-full rounded-lg overflow-hidden shadow-lg transition-shadow duration-150 hover:shadow-xl border-gray-300 bg-gray-100"
           v-for="project in sharedProjects" :key="project.id">
           <project :project="project"></project>

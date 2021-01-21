@@ -18,9 +18,9 @@ class ProjectController extends Controller
 
     public function index()
     {
-      $ownedProjects = $this->user->projects;
+      $ownedProjects = $this->user->projects()->with('members:id')->get();
 
-      $sharedProjects = Project::all()->filter(function ($project) {
+      $sharedProjects = Project::with('members:id')->get()->filter(function ($project) {
         return $project->members->contains($this->user) && $this->user->id != $project->user_id;
       });
 
