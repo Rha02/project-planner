@@ -1,6 +1,6 @@
 <template>
-  <div class="container mx-auto flex justify-center items-center">
-    <div class="shadow-lg w-3/4 md:w-3/5 xl:w-1/2 mt-4 bg-gray-100 rounded-2xl py-2">
+  <div class="container mx-auto flex justify-center items-center h-screen">
+    <div class="shadow-lg w-3/4 md:w-3/5 xl:w-1/2 bg-gray-100 rounded-2xl">
       <div class="my-2">
         <div class="text-2xl text-gray-800 text-center">
           Registration
@@ -32,7 +32,10 @@
             <br>
             <input type="password" placeholder="Retype Password" class="bg-gray-200 hover:bg-gray-300 py-1 px-2 shadow w-4/5 lg:w-3/5 rounded-lg" id="password_confirmation" v-model="password_confirmation">
           </div>
-          <button type="submit" class="px-2 py-1 bg-blue-500 hover:bg-blue-600 hover:text-white text-gray-100 rounded">Register</button>
+          <div class="flex-none space-x-2 text-lg">
+            <button type="submit" class="px-2 py-1 bg-blue-500 hover:bg-blue-600 hover:text-white text-gray-100 rounded">Register</button>
+            <router-link to="/login" class="px-2 py-1 text-blue-500 hover:text-blue-700">Already have an account?</router-link>
+          </div>
         </form>
       </div>
     </div>

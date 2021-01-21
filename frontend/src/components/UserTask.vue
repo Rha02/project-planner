@@ -1,9 +1,22 @@
 <template>
-  <div class="text-center rounded bg-gray-100 shadow p-1 text-lg">
-    <div class="text-gray-800 mb-1">
+  <div class="rounded-lg bg-gray-100 shadow p-2">
+    <div class="flex text-gray-800 text-lg">
+      <div class="font-semibold">
+        <router-link :to="`/projects/${task.project_id}`" class="text-blue-700 hover:text-blue-500">{{ task.project.title }}</router-link>
+      </div>
+      <div class="ml-4 font-semibold text-orange-600" v-if="task.status == 'in_progress'">
+        In Progress
+      </div>
+      <div class="ml-4 font-semibold text-red-600" v-if="task.status == 'not_started'">
+        Not Started
+      </div>
+      <div class="ml-4 font-semibold text-gray-600" v-if="task.status == 'unsigned'">
+        No Status
+      </div>
+    </div>
+    <div class="text-gray-800">
       {{ task.body }}
     </div>
-    <router-link :to="`/projects/${task.project_id}`" class="bg-blue-600 px-2 px-y rounded-lg text-white hover:bg-blue-500 transition ease-in-out duration-150">View</router-link>
   </div>
 </template>
 

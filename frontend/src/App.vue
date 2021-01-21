@@ -1,5 +1,4 @@
 <template>
-    <div class="">
             <!--<nav class="bg-gray-800 text-gray-300 text-lg">
               <div class="container mx-auto flex justify-between py-2 px-1">
                 <ul class="flex">
@@ -36,7 +35,7 @@
                 </ul>
               </div>
             </nav>-->
-            <div class="block lg:hidden" v-if="isMenuOpen">
+            <!--<div class="block lg:hidden" v-if="isMenuOpen">
               <a href="#" @click.prevent="goToDashboard()" class="bg-gray-800 hover:bg-gray-700 block text-gray-200 text-lg px-2 py-1 border-t-2 border-gray-900">
                 Home
               </a>
@@ -49,7 +48,26 @@
               <a href="#" @click.prevent="logout()" class="bg-gray-800 hover:bg-gray-700 block text-gray-200 text-lg px-2 py-1 border-t-2 border-gray-900" v-if="isAuth">
                 Sign out
               </a>
+            </div>-->
+      <div class="flex">
+        <div class="bg-indigo-800 lg:w-1/5 xl:w-1/6 h-screen" v-if="isAuth">
+          <div class="mx-2">
+            <div class="text-2xl px-2 py-1 font-semibold text-indigo-100">
+              TodoApp
             </div>
+            <div class="text-lg text-indigo-300 font-semibold">
+              <router-link to="/dashboard" class="py-2 px-2 block hover:bg-indigo-900 hover:text-indigo-100 rounded-lg">
+                      <i class="fas fa-home"></i> Dashboard
+              </router-link>
+              <router-link to="/projects" class="py-2 px-2 block hover:bg-indigo-900 hover:text-indigo-100 rounded-lg">
+                <i class="far fa-folder"></i> Projects
+              </router-link>
+              <a href="" @click.prevent="createProject()" class="py-2 px-2 block hover:bg-indigo-900 hover:text-indigo-100 rounded-lg">
+                <i class="fas fa-folder-plus"></i> Create a Project
+              </a>
+            </div>
+          </div>
+        </div>
         <div class="w-full max-w-8xl mx-auto">
             <router-view></router-view>
         </div>
