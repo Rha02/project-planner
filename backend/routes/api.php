@@ -32,10 +32,10 @@ Route::middleware('auth:api')->group(function ($router) {
   Route::delete('/projects/{project}', [App\Http\Controllers\Api\ProjectController::class, 'destroy']);
   Route::patch('/projects/{project}', [App\Http\Controllers\Api\ProjectController::class, 'update']);
 
-  Route::get('/projects/{project}/tasks', [App\Http\Controllers\Api\TaskController::class, 'index']);
-  Route::post('/projects/{project}/tasks', [App\Http\Controllers\Api\TaskController::class, 'store']);
-  Route::patch('/projects/{project}/tasks/{task}', [App\Http\Controllers\Api\TaskController::class, 'update']);
-  Route::delete('/projects/{project}/tasks/{task}', [App\Http\Controllers\Api\TaskController::class, 'destroy']);
+  Route::get('/projects/{project}/goals', [App\Http\Controllers\Api\GoalController::class, 'index']);
+  Route::post('/projects/{project}/goals', [App\Http\Controllers\Api\GoalController::class, 'store']);
+  Route::patch('/projects/{project}/goals/{goal}', [App\Http\Controllers\Api\GoalController::class, 'update']);
+  Route::delete('/projects/{project}/goals/{goal}', [App\Http\Controllers\Api\GoalController::class, 'destroy']);
 
   Route::get('/projects/{project}/members', [App\Http\Controllers\Api\ProjectUserController::class, 'index']);
   Route::post('/projects/{project}/members', [App\Http\Controllers\Api\ProjectUserController::class, 'store']);

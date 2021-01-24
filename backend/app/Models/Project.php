@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use App\Models\Task;
+use App\Models\Goal;
 
 class Project extends Model
 {
@@ -12,9 +12,9 @@ class Project extends Model
 
     protected $fillable = ['user_id', 'title', 'description'];
 
-    public function tasks()
+    public function goals()
     {
-      return $this->hasMany(Task::class);
+      return $this->hasMany(Goal::class);
     }
 
     public function members()
