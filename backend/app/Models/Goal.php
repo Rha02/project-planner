@@ -11,7 +11,7 @@ class Goal extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['title', 'status'];
+    protected $fillable = ['title', 'status', 'project_id'];
 
     public function tasks()
     {

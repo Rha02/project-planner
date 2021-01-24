@@ -7,34 +7,27 @@ use Illuminate\Validation\Rule;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
 use App\Models\Project;
+use App\Models\Goal;
 use App\Models\Task;
 
 class TaskController extends Controller
 {
-    protected $user;
-
-    public function __construct()
-    {
-      $this->user = auth()->user();
-    }
-
-    public function index(Project $project)
+    public function index(Project $project, Goal $goal)
     {
       $this->authorized($project);
 
-      $tasks = $project->tasks->toArray();
-
-      return $tasks;
+      return $goal->tasks->toArray();
     }
 
-    public function store(Project $project)
+    public function store(Project $project, Goal $goal)
     {
       $this->authorized($project);
 
       $validator = Validator::make(request()->all(), [
-        'user_id' => ['nullable', 'exists:App\Models\User,id', Rule::in($project->members->pluck('id'))],
+        'user_id' => ['nullable', Rule::in($project->members->pluck('id'))],
         'body' => 'required|string|max:3000',
-        'status' => ['nullable', Rule::in(['unsigned', 'not_started', 'in_progress', 'complete'])]
+        'status' => ['nullable', Rule::in(['unsigned', 'not_started', 'in_progress', 'complete'])],
+        'prev_task' => ['nullable', Rule::in($goal->tasks->pluck('id'))]
       ]);
 
       if ($validator->fails()) {
@@ -46,7 +39,7 @@ class TaskController extends Controller
 
       $attributes = $validator->validated();
 
-      $attributes['project_id'] = $project->id;
+      $attributes['goal_id'] = $goal->id;
 
       if (! $attributes['status']) {
         $attributes['status'] = 'unsigned';
@@ -57,7 +50,7 @@ class TaskController extends Controller
       return $task->toArray();
     }
 
-    public function destroy(Project $project, Task $task)
+    public function destroy(Project $project, Goal $goal, Task $task)
     {
       $this->authorized($project);
 
@@ -66,14 +59,15 @@ class TaskController extends Controller
       return 'Success';
     }
 
-    public function update(Project $project, Task $task)
+    public function update(Project $project, Goal $goal, Task $task)
     {
       $this->authorized($project);
 
       $validator = Validator::make(request()->all(), [
-        'user_id' => ['nullable', 'exists:App\Models\User,id', Rule::in($project->members->pluck('id'))],
+        'user_id' => ['nullable', Rule::in($project->members->pluck('id'))],
         'body' => 'required|string|max:3000',
-        'status' => ['nullable', Rule::in(['unsigned', 'not_started', 'in_progress', 'complete'])]
+        'status' => ['nullable', Rule::in(['unsigned', 'not_started', 'in_progress', 'complete'])],
+        'prev_task' => ['nullable', Rule::in($goal->tasks->pluck('id'))]
       ]);
 
       if ($validator->fails()) {
@@ -96,7 +90,7 @@ class TaskController extends Controller
 
     protected function authorized($project)
     {
-      if (! $project->members->contains($this->user)) {
+      if (! $project->members->contains(auth()->user())) {
         return response()->json([
           'is_error' => true,
           'message' => 'You are not authorized for this action.'
