@@ -26,8 +26,7 @@ class TaskController extends Controller
       $validator = Validator::make(request()->all(), [
         'user_id' => ['nullable', Rule::in($project->members->pluck('id'))],
         'body' => 'required|string|max:3000',
-        'status' => ['nullable', Rule::in(['unsigned', 'not_started', 'in_progress', 'complete'])],
-        'prev_task' => ['nullable', Rule::in($goal->tasks->pluck('id'))]
+        'status' => ['nullable', Rule::in(['unsigned', 'not_started', 'in_progress', 'complete'])]
       ]);
 
       if ($validator->fails()) {
@@ -66,8 +65,7 @@ class TaskController extends Controller
       $validator = Validator::make(request()->all(), [
         'user_id' => ['nullable', Rule::in($project->members->pluck('id'))],
         'body' => 'required|string|max:3000',
-        'status' => ['nullable', Rule::in(['unsigned', 'not_started', 'in_progress', 'complete'])],
-        'prev_task' => ['nullable', Rule::in($goal->tasks->pluck('id'))]
+        'status' => ['nullable', Rule::in(['unsigned', 'not_started', 'in_progress', 'complete'])]
       ]);
 
       if ($validator->fails()) {

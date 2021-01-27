@@ -17,7 +17,6 @@ class CreateTasksTable extends Migration
             $table->id();
             $table->foreignId('goal_id');
             $table->foreignId('user_id')->nullable();
-            $table->integer('prev_task')->nullable();
             $table->text('body');
             $table->string('status');
             $table->timestamps();

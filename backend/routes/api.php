@@ -42,6 +42,10 @@ Route::middleware('auth:api')->group(function ($router) {
   Route::patch('/projects/{project}/goals/{goal}/tasks/{task}', [App\Http\Controllers\Api\TaskController::class, 'update']);
   Route::delete('/projects/{project}/goals/{goal}/tasks/{task}', [App\Http\Controllers\Api\TaskController::class, 'destroy']);
 
+  Route::get('/projects/{project}/sequence/{task}', [App\Http\Controllers\Api\SequenceController::class, 'show']);
+  Route::post('/projects/{project}/sequence', [App\Http\Controllers\Api\SequenceController::class, 'store']);
+  Route::delete('/projects/{project}/sequence/{task}', [App\Http\Controllers\Api\SequenceController::class, 'destroy']);
+
   Route::get('/projects/{project}/members', [App\Http\Controllers\Api\ProjectUserController::class, 'index']);
   Route::post('/projects/{project}/members', [App\Http\Controllers\Api\ProjectUserController::class, 'store']);
   Route::delete('/projects/{project}/members', [App\Http\Controllers\Api\ProjectUserController::class, 'destroy']);
