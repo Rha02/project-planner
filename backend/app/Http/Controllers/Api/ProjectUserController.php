@@ -88,16 +88,4 @@ class ProjectUserController extends Controller
 
       return 'Success';
     }
-
-    protected function authorized($project)
-    {
-      if ($project->user_id != $this->user->id) {
-        return response()->json([
-          'is_error' => true,
-          'message' => 'You are not authorized for this action.'
-        ]);
-      }
-
-      return;
-    }
 }

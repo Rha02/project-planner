@@ -8,9 +8,12 @@ use App\Models\Project;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
+use App\Traits\ProjectRelated;
 
 class GoalController extends Controller
 {
+    use ProjectRelated;
+    
     public function index(Project $project)
     {
       $this->authorized($project);
@@ -81,17 +84,5 @@ class GoalController extends Controller
       $goal->update($attributes);
 
       return $goal->toArray();
-    }
-
-    protected function authorized($project)
-    {
-      if (! $project->members->contains(auth()->user())) {
-        return response()->json([
-          'is_error' => true,
-          'message' => 'You are not authorized for this action.'
-        ]);
-      }
-
-      return;
     }
 }

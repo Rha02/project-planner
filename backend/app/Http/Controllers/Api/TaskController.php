@@ -9,9 +9,12 @@ use Illuminate\Support\Facades\Validator;
 use App\Models\Project;
 use App\Models\Goal;
 use App\Models\Task;
+use App\Traits\ProjectRelated;
 
 class TaskController extends Controller
 {
+    use ProjectRelated;
+    
     public function index(Project $project, Goal $goal)
     {
       $this->authorized($project);
@@ -84,17 +87,5 @@ class TaskController extends Controller
       $task->update($attributes);
 
       return $task->toArray();
-    }
-
-    protected function authorized($project)
-    {
-      if (! $project->members->contains(auth()->user())) {
-        return response()->json([
-          'is_error' => true,
-          'message' => 'You are not authorized for this action.'
-        ]);
-      }
-
-      return;
     }
 }

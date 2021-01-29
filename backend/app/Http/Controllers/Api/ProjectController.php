@@ -6,9 +6,12 @@ use Illuminate\Http\Request;
 use App\Models\Project;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
+use App\Traits\ProjectRelated;
 
 class ProjectController extends Controller
 {
+    use ProjectRelated;
+    
     protected $user;
 
     public function __construct()
@@ -32,24 +35,14 @@ class ProjectController extends Controller
 
     public function show(Project $project)
     {
-      if (! $project->members->contains($this->user)) {
-        return response()->json([
-          'is_error' => true,
-          'message' => 'You are not authorized for this action.'
-        ]);
-      }
+      $this->authorized($project);
 
       return $project->toArray();
     }
 
     public function destroy(Project $project)
     {
-      if ($this->user->id != $project->user_id) {
-        return response()->json([
-          'is_error' => true,
-          'message' => 'You are not authorized for this action.'
-        ]);
-      }
+      $this->isOwner($project);
 
       $project->delete();
 
@@ -71,12 +64,7 @@ class ProjectController extends Controller
 
     public function update(Project $project)
     {
-      if (! $project->members->contains($this->user)) {
-        return response()->json([
-          'is_error' => true,
-          'message' => 'You are not authorized for this action.'
-        ]);
-      }
+      $this->authorized($project);
 
       $attributes = $this->validateProjectRequest();
 
