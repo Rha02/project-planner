@@ -2,7 +2,7 @@
   <div class="rounded-lg bg-gray-100 shadow p-2">
     <div class="flex text-gray-800 text-lg">
       <div class="font-semibold">
-        <router-link :to="`/projects/${task.project_id}`" class="text-blue-700 hover:text-blue-500">{{ task.project.title }}</router-link>
+        <router-link :to="`/projects/${task.goal.project_id}/goals/${task.goal.id}`" class="text-blue-700 hover:text-blue-500">{{ task.goal.project.title }}</router-link>
       </div>
       <div class="ml-4 font-semibold text-orange-600" v-if="task.status == 'in_progress'">
         In Progress

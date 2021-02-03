@@ -1,5 +1,5 @@
 <template>
-  <div class="container bg-gray-200">
+  <div class="bg-gray-200 h-full">
     <div class="" v-if="ownedProjects.length">
       <div class="bg-gray-100 shadow">
         <div class="mx-8 py-3">

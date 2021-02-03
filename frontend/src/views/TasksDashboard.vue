@@ -40,6 +40,7 @@ export default {
         this.tasks = res.data.filter(function (task) {
           return task.status !== 'complete'
         })
+        console.log('hello')
       })
   }
 }

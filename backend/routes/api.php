@@ -34,6 +34,7 @@ Route::middleware('auth:api')->group(function ($router) {
 
   Route::get('/projects/{project}/goals', [App\Http\Controllers\Api\GoalController::class, 'index']);
   Route::post('/projects/{project}/goals', [App\Http\Controllers\Api\GoalController::class, 'store']);
+  Route::get('/projects/{project}/goals/{goal}', [App\Http\Controllers\Api\GoalController::class, 'show']);
   Route::patch('/projects/{project}/goals/{goal}', [App\Http\Controllers\Api\GoalController::class, 'update']);
   Route::delete('/projects/{project}/goals/{goal}', [App\Http\Controllers\Api\GoalController::class, 'destroy']);
 

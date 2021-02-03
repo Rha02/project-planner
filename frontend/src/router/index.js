@@ -6,6 +6,7 @@ import Login from '../views/Login.vue'
 import Register from '../views/Register.vue'
 import ProjectsDashboard from '../views/ProjectsDashboard.vue'
 import Project from '../views/Project.vue'
+import Goal from '../views/Goal.vue'
 
 import store from '../store'
 
@@ -61,6 +62,17 @@ const routes = [
   {
     path: '/projects/:id',
     component: Project,
+    beforeEnter (to, from, next) {
+      if (store.state.authToken) {
+        next()
+      } else {
+        next('/login')
+      }
+    }
+  },
+  {
+    path: '/projects/:id/goals/:goal_id',
+    component: Goal,
     beforeEnter (to, from, next) {
       if (store.state.authToken) {
         next()

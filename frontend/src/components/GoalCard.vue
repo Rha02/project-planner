@@ -2,10 +2,7 @@
   <div class="">
     <div class="text-gray-700 lg:text-white hover:text-gray-700 shadow-lg rounded-md text-lg bg-gray-100 mx-2 my-3 py-1 px-2 items-center">
       <div class="w-full text-gray-800 overflow-auto">
-        {{ task.body }}
-      </div>
-      <div class="text-gray-700 mt-1">
-        <span class="font-semibold">Assignee:</span> {{ assignedUser }}
+        {{ goal.title }}
       </div>
       <div class="flex justify-between">
         <div class="text-center hover:text-red-700 transition ease-in-out duration-150">
@@ -20,19 +17,16 @@
         </div>
       </div>
     </div>
-    <div class="" v-if="editing">
-      <task-edit-modal :task="task" :project="project" @stopShowing="editing = false" @updateTask="updateTask"></task-edit-modal>
-    </div>
   </div>
 </template>
 
 <script>
-import TaskEditModal from '../components/TaskEditModal.vue'
+import GoalEditModal from '../components/GoalEditModal.vue'
 import axios from 'axios'
 export default {
-  props: ['task', 'project'],
+  props: ['goal', 'project'],
   components: {
-    taskEditModal: TaskEditModal
+    goalEditModal: GoalEditModal
   },
   data () {
     return {
@@ -40,26 +34,18 @@ export default {
     }
   },
   computed: {
-    taskUri () {
-      return `/projects/${this.project.id}/goals/${this.$route.params.goal_id}/tasks/${this.task.id}?token=${this.$store.state.authToken}`
-    },
-    assignedUser () {
-      for (var i = 0; i < this.project.members.length; i++) {
-        if (this.project.members[i].id === this.task.user_id) {
-          return this.project.members[i].email
-        }
-      }
-      return 'Nobody'
+    goalUri () {
+      return `/projects/${this.$route.params.id}/goals/${this.goal.id}?token=${this.$store.state.authToken}`
     }
   },
   methods: {
     deleteTask () {
-      axios.delete(this.taskUri)
+      axios.delete(this.goalUri)
         .then(res => {
           if (res.data.is_error) {
             alert(res.data.message)
           } else {
-            this.$emit('taskDeleted', this.task.id)
+            this.$emit('goalDeleted', this.goal.id)
           }
         })
         .catch(res => {
@@ -67,16 +53,15 @@ export default {
         })
     },
     updateTask (payload) {
-      axios.patch(this.taskUri, {
+      axios.patch(this.goalUri, {
         status: payload.status,
-        body: payload.body,
-        user_id: payload.user_id
+        title: payload.title
       })
         .then(res => {
           if (res.data.is_error) {
             alert(res.data.message)
           } else {
-            this.$emit('taskUpdated', res.data)
+            this.$emit('goalUpdated', res.data)
           }
         })
         .catch(res => {

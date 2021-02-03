@@ -13,7 +13,7 @@ use App\Traits\ProjectRelated;
 class GoalController extends Controller
 {
     use ProjectRelated;
-    
+
     public function index(Project $project)
     {
       $this->authorized($project);
@@ -82,6 +82,13 @@ class GoalController extends Controller
       }
 
       $goal->update($attributes);
+
+      return $goal->toArray();
+    }
+
+    public function show(Project $project, Goal $goal)
+    {
+      $this->authorized($project);
 
       return $goal->toArray();
     }
