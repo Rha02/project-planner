@@ -1,33 +1,17 @@
 <template>
   <div class="">
-    <div class="text-gray-700 lg:text-white hover:text-gray-700 shadow-lg rounded-md text-lg bg-gray-100 mx-2 my-3 py-1 px-2 items-center">
+    <div class="text-gray-700 lg:text-white hover:text-gray-700 shadow hover:shadow-lg transition ease-in-out duration-150 rounded-md text-lg bg-gray-100 mx-2 my-3 py-1 px-2 items-center">
       <div class="w-full text-gray-800 overflow-auto">
         {{ goal.title }}
-      </div>
-      <div class="flex justify-between">
-        <div class="text-center hover:text-red-700 transition ease-in-out duration-150">
-          <button type="button" class="px-1" @click="deleteTask">
-            <i class="fas fa-trash"></i>
-          </button>
-        </div>
-        <div class="text-center hover:text-blue-700 transition ease-in-out duration-150">
-          <button type="button" class="px-1" @click="editing = true">
-            <i class="fas fa-pen"></i>
-          </button>
-        </div>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import GoalEditModal from '../components/GoalEditModal.vue'
 import axios from 'axios'
 export default {
-  props: ['goal', 'project'],
-  components: {
-    goalEditModal: GoalEditModal
-  },
+  props: ['goal'],
   data () {
     return {
       editing: false

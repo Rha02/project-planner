@@ -1,5 +1,5 @@
 <template>
-  <div class="text-gray-800 shadow-lg rounded-md text-sm bg-gray-100 mx-2 my-3 py-1 px-2">
+  <div class="text-gray-800 shadow rounded-md text-sm bg-gray-100 mx-2 my-3 py-1 px-2">
     <div class="text-center text-xl hover:text-blue-600 transition ease-in-out duration-150">
       <button type="button" @click="creating_goal = true" class="w-full">
         <i class="far fa-plus-square"></i>
@@ -13,7 +13,7 @@
           <div class="text-2xl text-gray-800 text-center font-semibold">
             Create a Goal
           </div>
-          <button @click="creating_task = false" class="px-2 text-gray-800 text-xl font-semibold hover:bg-gray-400 rounded-lg transition ease-in-out duration-150">
+          <button @click="creating_goal = false" class="px-2 text-gray-800 text-xl font-semibold hover:bg-gray-400 rounded-lg transition ease-in-out duration-150">
             <i class="fas fa-times"></i>
           </button>
         </div>

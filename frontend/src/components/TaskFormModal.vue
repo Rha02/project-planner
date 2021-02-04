@@ -1,5 +1,5 @@
 <template>
-  <div class="text-gray-800 shadow-lg rounded-md text-sm bg-gray-100 mx-2 my-3 py-1 px-2">
+  <div class="text-gray-800 shadow rounded-md text-sm bg-gray-100 mx-2 my-3 py-1 px-2">
     <div class="text-center text-xl hover:text-blue-600 transition ease-in-out duration-150">
       <button type="button" @click="creating_task = true" class="w-full">
         <i class="far fa-plus-square"></i>

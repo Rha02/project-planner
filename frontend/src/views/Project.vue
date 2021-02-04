@@ -60,7 +60,7 @@
           </div>
           <div v-for="goal in filteredgoals('unsigned')" :key="goal.id">
             <router-link :to="`/projects/${project.id}/goals/${goal.id}`">
-              {{ goal.title }}
+              <goal :goal="goal"></goal>
             </router-link>
           </div>
           <goalform @addGoal="createGoal" status="unsigned" :project="project"></goalform>
@@ -73,7 +73,7 @@
           </div>
           <div v-for="goal in filteredgoals('not_started')" :key="goal.id">
             <router-link :to="`/projects/${project.id}/goals/${goal.id}`">
-              {{ goal.title }}
+              <goal :goal="goal"></goal>
             </router-link>
           </div>
           <goalform @addGoal="createGoal" status="not_started" :project="project"></goalform>
@@ -86,7 +86,7 @@
           </div>
           <div v-for="goal in filteredgoals('in_progress')" :key="goal.id">
             <router-link :to="`/projects/${project.id}/goals/${goal.id}`">
-              {{ goal.title }}
+              <goal :goal="goal"></goal>
             </router-link>
           </div>
           <goalform @addGoal="createGoal" status="in_progress" :project="project"></goalform>
@@ -99,7 +99,7 @@
           </div>
           <div v-for="goal in filteredgoals('complete')" :key="goal.id">
             <router-link :to="`/projects/${project.id}/goals/${goal.id}`">
-              {{ goal.title }}
+              <goal :goal="goal"></goal>
             </router-link>
           </div>
           <goalform @addGoal="createGoal" status="complete" :project="project"></goalform>
@@ -115,11 +115,13 @@
 <script>
 import GoalFormModal from '../components/GoalFormModal.vue'
 import ProjectSettingsModal from '../components/ProjectSettingsModal.vue'
+import GoalCard from '../components/GoalCard.vue'
 import axios from 'axios'
 export default {
   components: {
     goalform: GoalFormModal,
-    settingsModal: ProjectSettingsModal
+    settingsModal: ProjectSettingsModal,
+    goal: GoalCard
   },
   data () {
     return {
@@ -218,18 +220,6 @@ export default {
     },
     createGoal (payload) {
       this.goals.push(payload)
-    },
-    removeGoal (goalId) {
-      this.goals = this.goals.filter(function (goal) {
-        return goal.id !== goalId
-      })
-    },
-    updateGoal (payload) {
-      for (var i = 0; i < this.goals.length; i++) {
-        if (this.goals[i].id === payload.id) {
-          this.goals.splice(i, 1, payload)
-        }
-      }
     }
   },
   created () {
