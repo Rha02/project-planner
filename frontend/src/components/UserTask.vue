@@ -13,6 +13,9 @@
       <div class="ml-4 font-semibold text-gray-600" v-if="task.status == 'unsigned'">
         No Status
       </div>
+      <div class="ml-4 font-semibold text-green-600" v-if="task.status == 'complete'">
+        Completed
+      </div>
     </div>
     <div class="text-gray-800">
       {{ task.body }}

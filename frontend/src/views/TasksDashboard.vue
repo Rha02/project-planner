@@ -10,12 +10,93 @@
           Your Tasks:
         </div>
         <div class="items-center mx-8 items-center font-semibold text-gray-700 text-lg">
-          <span class="mr-2">Filtered by: Latest</span>
-          <span class="px-2 py-1 text-2xl text-gray-700 hover:bg-gray-400 transition ease-in-out duration-150 rounded-lg"><i class="fas fa-sliders-h"></i></span>
+          <span class="mr-2">Filter</span>
+          <span @click="inFilters = ! inFilters" class="px-2 py-1 text-2xl text-gray-700 hover:bg-gray-400 transition ease-in-out duration-150 rounded-lg">
+            <i class="fas fa-sliders-h"></i>
+          </span>
+        </div>
+      </div>
+      <div class="mx-8 bg-gray-200 text-gray-800 mb-2" v-if="inFilters">
+        <div class="px-2 flex flex-wrap">
+          <div class="w-1/3">
+            <div class="mr-12 border-b-2 border-gray-600 pb-2 text-lg font-semibold">
+              Task
+            </div>
+            <div class="mr-12 text-gray-700">
+              <a href="#" @click.prevent="sortByTaskId()">
+                Date Created
+              </a>
+            </div>
+            <div class="mr-12 text-gray-700">
+              <a href="#" @click.prevent="sortByTaskLatest()">
+                Latest Created
+              </a>
+            </div>
+            <div class="mr-12 text-gray-700">
+              <a href="#" @click.prevent="sortByStatus('unsigned')" class="mr-12 text-gray-700">
+                No Status
+              </a>
+            </div>
+            <div class="mr-12 text-gray-700">
+              <a href="#" @click.prevent="sortByStatus('not_started')" class="mr-12 text-gray-700">
+                Not Started
+              </a>
+            </div>
+            <div class="mr-12 text-gray-700">
+              <a href="#" @click.prevent="sortByStatus('in_progress')" class="mr-12 text-gray-700">
+                In progress
+              </a>
+            </div>
+            <div class="mr-12 text-gray-700">
+              <a href="#" @click.prevent="sortByStatus('complete')" class="mr-12 text-gray-700">
+                Completed
+              </a>
+            </div>
+          </div>
+          <div class="w-1/3">
+            <div class="mr-12 border-b-2 border-gray-600 pb-2 text-lg font-semibold">
+              Goal
+            </div>
+            <div class="mr-12 text-gray-700">
+              <a href="#" @click.prevent="sortByGoalTitle()" class="mr-12 text-gray-700">
+                Title A-Z
+              </a>
+            </div>
+            <div class="mr-12 text-gray-700">
+              <a href="#" @click.prevent="sortByGoalId()" class="mr-12 text-gray-700">
+                Date Created
+              </a>
+            </div>
+            <div class="mr-12 text-gray-700">
+              <a href="#" @click.prevent="sortByGoalLatest()">
+                Latest Created
+              </a>
+            </div>
+          </div>
+          <div class="w-1/3">
+            <div class="mr-12 border-b-2 border-gray-600 pb-2 text-lg font-semibold">
+              Project
+            </div>
+            <div class="mr-12 text-gray-700">
+              <a href="#" @click.prevent="sortByProjectTitle()" class="mr-12 text-gray-700">
+                Title A-Z
+              </a>
+            </div>
+            <div class="mr-12 text-gray-700">
+              <a href="#" @click.prevent="sortByProjectId()" class="mr-12 text-gray-700">
+                Date Created
+              </a>
+            </div>
+            <div class="mr-12 text-gray-700">
+              <a href="#" @click.prevent="sortByProjectLatest()">
+                Latest Created
+              </a>
+            </div>
+          </div>
         </div>
       </div>
       <div class="mx-8 space-y-2">
-        <div class="" v-for="task in tasks" :key="task.id">
+        <div class="" v-for="task in sortedTasks" :key="task.id">
           <task :task="task"></task>
         </div>
       </div>
@@ -31,13 +112,55 @@ export default {
   },
   data () {
     return {
-      tasks: []
+      tasks: [],
+      sortedTasks: [],
+      inFilters: false
+    }
+  },
+  methods: {
+    sortByTaskId () {
+      this.sortedTasks = this.tasks
+      this.sortedTasks.sort((a, b) => a.id - b.id)
+    },
+    sortByTaskLatest () {
+      this.sortedTasks = this.tasks
+      this.sortedTasks.sort((a, b) => b.id - a.id)
+    },
+    sortByStatus (status) {
+      this.sortedTasks = this.tasks.filter(function (task) {
+        return task.status === status
+      })
+    },
+    sortByGoalTitle () {
+      this.sortedTasks = this.tasks
+      this.sortedTasks.sort((a, b) => a.goal.title.localeCompare(b.goal.title))
+    },
+    sortByGoalId () {
+      this.sortedTasks = this.tasks
+      this.sortedTasks.sort((a, b) => a.goal.id - b.goal.id)
+    },
+    sortByGoalLatest () {
+      this.sortedTasks = this.tasks
+      this.sortedTasks.sort((a, b) => b.goal.id - a.goal.id)
+    },
+    sortByProjectId () {
+      this.sortedTasks = this.tasks
+      this.sortedTasks.sort((a, b) => a.goal.id - b.goal.id)
+    },
+    sortByProjectLatest () {
+      this.sortedTasks = this.tasks
+      this.sortedTasks.sort((a, b) => b.goal.id - a.goal.id)
+    },
+    sortByProjectTitle () {
+      this.sortedTasks = this.tasks
+      this.sortedTasks.sort((a, b) => a.goal.project.title.localeCompare(b.goal.project.title))
     }
   },
   created () {
     axios.get(`/user/tasks?token=${this.$store.state.authToken}`)
       .then(res => {
-        this.tasks = res.data.filter(function (task) {
+        this.tasks = res.data
+        this.sortedTasks = res.data.filter(function (task) {
           return task.status !== 'complete'
         })
         console.log('hello')
