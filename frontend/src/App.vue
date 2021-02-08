@@ -15,6 +15,9 @@
           <a href="" @click.prevent="createProject()" class="py-2 px-2 block hover:bg-indigo-900 hover:text-indigo-100 rounded-lg">
             <i class="fas fa-folder-plus"></i> Create a Project
           </a>
+          <a href="" @click.prevent="logout()" class="py-2 px-2 block hover:bg-indigo-900 hover:text-indigo-100 rounded-lg">
+            Logout
+          </a>
         </div>
       </div>
     </div>
