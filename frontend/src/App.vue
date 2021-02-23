@@ -1,6 +1,6 @@
 <template>
-  <div class="flex">
-    <div class="bg-indigo-800 lg:w-1/5 xl:w-1/6 h-screen" v-if="isAuth">
+  <div class="flex h-full">
+    <div class="bg-indigo-800 lg:w-1/5 xl:w-1/6" v-if="isAuth">
       <div class="mx-2">
         <div class="text-2xl px-2 py-1 font-semibold text-indigo-100">
           TodoApp
@@ -13,7 +13,7 @@
             <i class="far fa-folder"></i> Projects
           </router-link>
           <a href="" @click.prevent="createProject()" class="py-2 px-2 block hover:bg-indigo-900 hover:text-indigo-100 rounded-lg">
-            <i class="fas fa-folder-plus"></i> Create a Project
+            <i class="fas fa-folder-plus"></i> Create Project
           </a>
           <a href="" @click.prevent="logout()" class="py-2 px-2 block hover:bg-indigo-900 hover:text-indigo-100 rounded-lg">
             Logout
@@ -21,7 +21,7 @@
         </div>
       </div>
     </div>
-    <div class="w-full max-w-8xl mx-auto">
+    <div class="w-full max-w-8xl mx-auto h-screen">
       <router-view></router-view>
     </div>
   </div>
