@@ -87,7 +87,7 @@ export default {
           status: 'unsigned',
           body: 'To do blah blah',
           id: 4,
-          prev_tasks: [2],
+          prev_tasks: [1],
           next_tasks: [],
           depth: 0
         }
@@ -101,24 +101,26 @@ export default {
       }
     },
     calculateDepth (task) {
+      const taskIdx = this.tasks.findIndex(t => t.id === task.id)
       if (!task.prev_tasks.length) {
-        console.log('oh no')
-        this.tasks[task.id - 1].depth = 1
+        this.tasks[
+          taskIdx
+        ].depth = 1
         return 1
       }
       let depth = 0
       for (var i = 0; i < task.prev_tasks.length; i++) {
-        var prevTask = this.tasks[task.prev_tasks[i] - 1]
-        console.log(prevTask)
+        const prevTaskIdx = this.tasks.findIndex(t => t.id === task.prev_tasks[i])
+        const prevTask = this.tasks[prevTaskIdx]
         if (!prevTask.depth) {
           prevTask.depth = this.calculateDepth(prevTask)
-          this.tasks[prevTask.id - 1].depth = prevTask.depth
+          this.tasks[prevTaskIdx].depth = prevTask.depth
         }
         if (prevTask.depth > depth) {
           depth = prevTask.depth
         }
       }
-      this.tasks[task.id - 1].depth = depth + 1
+      this.tasks[taskIdx].depth = depth + 1
       return depth + 1
     }
   },
