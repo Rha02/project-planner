@@ -34,11 +34,12 @@
       <div class="mx-4 my-2 bg-white shadow rounded-lg overflow-y-auto shadow-lg"
             style="height:75vh;"
             v-on:scroll="positionLines()">
-          <div class="">
-            <div class="mx-4 my-2 flex flex-wrap justify-around">
+          <div class="" v-for="leveledTasks in taskHierarchy" :key="leveledTasks[0].depth">
+            <div class="mx-4 my-4 flex flex-wrap justify-around">
               <div class="w-1/4 px-2 py-2 flex justify-center items-center"
-                    v-for="task in tasks" :key="task.id">
-                <span :id="`id${task.id}`" class="rounded border-l-4 border-green-600 bg-white shadow px-2 text-center">
+                    v-for="task in leveledTasks" :key="task.id">
+                <span :id="`id${task.id}`" class="rounded border-l-4 bg-white shadow px-2 text-center border-gray-600"
+                      v-bind:class="{ 'border-green-600': task.status == 'complete', 'border-orange-600': task.status == 'in_progress', 'border-red-600': task.status == 'not_started' }">
                   {{ task.body }}
                 </span>
               </div>
@@ -87,11 +88,30 @@ export default {
           status: 'unsigned',
           body: 'To do blah blah',
           id: 4,
-          prev_tasks: [1],
+          prev_tasks: [2],
+          next_tasks: [],
+          depth: 0
+        },
+        {
+          status: 'unsigned',
+          body: 'To do blah blah',
+          id: 5,
+          prev_tasks: [],
           next_tasks: [],
           depth: 0
         }
       ]
+    }
+  },
+  computed: {
+    taskHierarchy () {
+      let i = 1
+      const orderedTasks = []
+      while (this.tasks.some(task => task.depth === i)) {
+        orderedTasks.push(this.tasks.filter(task => task.depth === i))
+        i++
+      }
+      return orderedTasks
     }
   },
   methods: {
@@ -140,6 +160,7 @@ export default {
         )
       }
     }
+    console.log(this.taskHierarchy)
   },
   destroyed () {
     for (var i = 0; i < this.arrows.length; i++) {
