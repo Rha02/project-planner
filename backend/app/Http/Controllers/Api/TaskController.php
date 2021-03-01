@@ -14,7 +14,7 @@ use App\Traits\ProjectRelated;
 class TaskController extends Controller
 {
     use ProjectRelated;
-    
+
     public function index(Project $project, Goal $goal)
     {
       $this->authorized($project);
@@ -49,7 +49,7 @@ class TaskController extends Controller
 
       $task = Task::create($attributes);
 
-      return $task->toArray();
+      return $task->fresh();
     }
 
     public function destroy(Project $project, Goal $goal, Task $task)

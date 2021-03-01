@@ -2,7 +2,6 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 
 import TasksDashboard from '../views/TasksDashboard.vue'
-import SequenceDashboard from '../views/prototypes/SequenceDashboard.vue'
 import Login from '../views/Login.vue'
 import Register from '../views/Register.vue'
 import ProjectsDashboard from '../views/ProjectsDashboard.vue'
@@ -74,17 +73,6 @@ const routes = [
   {
     path: '/projects/:id/goals/:goal_id',
     component: Goal,
-    beforeEnter (to, from, next) {
-      if (store.state.authToken) {
-        next()
-      } else {
-        next('/login')
-      }
-    }
-  },
-  {
-    path: '/prototypes/sequence',
-    component: SequenceDashboard,
     beforeEnter (to, from, next) {
       if (store.state.authToken) {
         next()
