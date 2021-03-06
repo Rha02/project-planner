@@ -1,27 +1,32 @@
 <template>
-  <div class="">
-    <div class="text-gray-700 lg:text-white hover:text-gray-700 shadow-lg rounded-md text-lg bg-gray-100 mx-2 my-3 py-1 px-2 items-center">
-      <div class="w-full text-gray-800 overflow-auto">
+  <div class="rounded border-l-4 bg-white text-gray-100 hover:text-gray-700 shadow px-2 text-center border-gray-600"
+        v-bind:class="{ 'border-green-600': task.status == 'complete', 'border-orange-600': task.status == 'in_progress', 'border-red-600': task.status == 'not_started' }">
+    <div class="flex">
+      <span class="text-gray-800">
         {{ task.body }}
+      </span>
+    </div>
+    <div class="text-gray-700 mt-1">
+      <span class="font-semibold">Assignee:</span> {{ assignedUser }}
+    </div>
+    <div class="flex justify-between mb-1">
+      <div class="text-center hover:text-blue-600 hover:bg-gray-300 rounded-lg transition ease-in-out duration-150"
+            v-bind:class="{ 'text-blue-600': chaining }">
+        <button type="button" class="px-1" @click="chainTasks()" v-if="! lockChain">
+          <i class="fas fa-link"></i>
+        </button>
+        <button type="button" class="px-1 text-red-600" @click="cancelChaining()" v-else>
+          <i class="fas fa-times"></i>
+        </button>
       </div>
-      <div class="text-gray-700 mt-1">
-        <span class="font-semibold">Assignee:</span> {{ assignedUser }}
-      </div>
-      <div class="flex justify-between">
-        <div class="text-center hover:text-red-700 transition ease-in-out duration-150">
-          <button type="button" class="px-1" @click="deleteTask">
-            <i class="fas fa-trash"></i>
-          </button>
-        </div>
-        <div class="text-center hover:text-blue-700 transition ease-in-out duration-150">
-          <button type="button" class="px-1" @click="editing = true">
-            <i class="fas fa-pen"></i>
-          </button>
-        </div>
+      <div class="text-center hover:text-blue-600 hover:bg-gray-300 rounded-lg transition ease-in-out duration-150">
+        <button type="button" class="px-1" @click="editing = true">
+          <i class="fas fa-pen"></i>
+        </button>
       </div>
     </div>
     <div class="" v-if="editing">
-      <task-edit-modal :task="task" :project="project" @stopShowing="editing = false" @updateTask="updateTask"></task-edit-modal>
+      <task-edit-modal :task="task" :project="project" @stopShowing="editing = false" @updateTask="updateTask" @removeTask="deleteTask"></task-edit-modal>
     </div>
   </div>
 </template>
@@ -30,13 +35,14 @@
 import TaskEditModal from '../components/TaskEditModal.vue'
 import axios from 'axios'
 export default {
-  props: ['task', 'project'],
+  props: ['task', 'project', 'chaining'],
   components: {
     taskEditModal: TaskEditModal
   },
   data () {
     return {
-      editing: false
+      editing: false,
+      lockChain: false
     }
   },
   computed: {
@@ -83,7 +89,20 @@ export default {
           alert('Server-side error occurred!')
         })
       this.editing = false
+    },
+    chainTasks () {
+      if (!this.chaining) {
+        this.lockChain = true
+      }
+      this.$emit('chainTasks', this.task.id)
+    },
+    cancelChaining () {
+      this.lockChain = false
+      this.$emit('cancelChaining')
     }
   }
 }
 </script>
+
+<style lang="css" scoped>
+</style>

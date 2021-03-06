@@ -31,8 +31,9 @@
         <option :value="null">Unassigned</option>
         <option v-for="member in project.members" :key="member.id" :value="member.id">{{ member.email }}</option>
       </select>
-      <div class="text-center text-lg mt-2">
+      <div class="text-center text-lg mt-3 space-x-3">
         <button type="button" @click="updateTask()" class="mx-1 px-2 py-1 font-semibold rounded bg-blue-600 hover:bg-blue-500 text-white transition ease-in-out duration-150">Update</button>
+        <button type="button" @click="removeTask()" class="mx-1 px-2 py-1 font-semibold rounded text-red-700 hover:text-red-600 transition ease-in-out duration-150">Delete</button>
       </div>
     </div>
   </div>
@@ -56,6 +57,9 @@ export default {
     },
     updateTask () {
       this.$emit('updateTask', this.formData)
+    },
+    removeTask () {
+      this.$emit('removeTask')
     }
   },
   created () {

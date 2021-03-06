@@ -1,6 +1,6 @@
 <template>
-  <div class="justify-center text-gray-900 bg-gray-200 overflow-y-auto h-screen" v-on:scroll="positionLines()">
-    <div class="bg-gray-100 shadow">
+  <div class="justify-center text-gray-900 bg-gray-200 overflow-y-auto h-screen relative" v-on:scroll="positionLines()">
+    <div class="bg-gray-100 shadow z-30 relative">
       <div class="mx-8 py-2 font-semibold">
         <div class="text-2xl  w-full">
           <router-link :to="`/projects/${project.id}`" class="font-semibold text-blue-600 hover:underline">
@@ -9,9 +9,8 @@
         </div>
       </div>
     </div>
-    <div class="">
-      <div class="mx-8 pt-2 flex justify-between">
-        <div class="font-semibold text-xl text-gray-700 hover:text-gray-700 w-full">
+      <div class="mx-8 pt-2 flex justify-between z-20 relative bg-gray-200">
+        <div class="font-semibold text-xl text-gray-700 hover:text-gray-700">
           <span class="text-gray-800">{{ goal.title }}</span>
           <span class="ml-1 text-lg">
             <button type="button" @click="inSettings = true" class="px-1 bg-gray-400 hover:bg-gray-300 hover:text-blue-600 rounded-lg transition ease-in-out duration-150">
@@ -19,8 +18,8 @@
             </button>
           </span>
         </div>
-        <div class="w-4/5 md:w-1/4 lg:w-1/3 xl:w-1/5 flex">
-          <div class="text-gray-800 font-semibold text-xl flex-none">
+        <div class="w-4/5 md:w-1/4 lg:w-1/3 xl:w-1/5 flex relative z-50">
+          <div class="text-gray-800 font-semibold text-xl flex-none relative z-50">
             Status:
             <span class="text-green-600" v-if="goal.status == 'complete'">Completed</span>
             <span class="text-orange-600" v-if="goal.status == 'in_progress'">In Progress</span>
@@ -29,26 +28,29 @@
           </div>
         </div>
       </div>
-      <div class="mt-2 text-xl text-center font-semibold flex justify-center">
+      <div class="py-2 text-xl text-center font-semibold flex justify-center z-20 relative bg-gray-200">
         Tasks: {{ tasks.length }}
         <task-form :project="project" @addTask="createTask"></task-form>
       </div>
-      <div class="mx-4 my-2 bg-white shadow rounded-lg overflow-y-auto shadow-lg"
+      <div class="mx-4 py-2 bg-white shadow rounded-lg overflow-y-auto shadow-lg"
             style="height:75vh;"
             v-on:scroll="positionLines()">
           <div class="" v-for="leveledTasks in taskHierarchy" :key="leveledTasks[0].depth">
             <div class="mx-4 my-4 flex flex-wrap justify-around">
               <div class="w-1/4 mb-16 px-2 py-2 flex justify-center items-center"
                     v-for="task in leveledTasks" :key="task.id">
-                <span :id="`id${task.id}`" class="rounded border-l-4 bg-white shadow px-2 text-center border-gray-600"
-                      v-bind:class="{ 'border-green-600': task.status == 'complete', 'border-orange-600': task.status == 'in_progress', 'border-red-600': task.status == 'not_started' }">
-                  {{ task.body }}
-                </span>
+                <task :id="`id${task.id}`"
+                      :task="task"
+                      :project="project"
+                      :chaining="chaining"
+                      @taskDeleted="removeTask"
+                      @taskUpdated="updateTask"
+                      @chainTasks="chainingTasks"
+                      @cancelChaining="chaining = false"></task>
               </div>
             </div>
           </div>
       </div>
-    </div>
     <div class="" v-if="inSettings">
       <goal-settings :goal="goal" @stopShowing="inSettings = false" @deleteGoal="deleteGoal()" @updateGoal="updateGoal"></goal-settings>
     </div>
@@ -60,10 +62,12 @@ import LeaderLine from 'leader-line'
 import axios from 'axios'
 import GoalEditModal from '../components/GoalEditModal.vue'
 import TaskFormModal from '../components/TaskFormModal.vue'
+import Task from '../components/Task.vue'
 export default {
   components: {
     goalSettings: GoalEditModal,
-    taskForm: TaskFormModal
+    taskForm: TaskFormModal,
+    task: Task
   },
   data () {
     return {
@@ -71,7 +75,10 @@ export default {
       project: {},
       goal: {},
       tasks: [],
-      inSettings: false
+      inSettings: false,
+      chaining: false,
+      firstChainedTaskId: null,
+      dataPromise: null
     }
   },
   computed: {
@@ -127,15 +134,9 @@ export default {
     },
     calculateDepth (task) {
       const taskIdx = this.tasks.findIndex(t => t.id === task.id)
-      if (!task.prev_tasks.length) {
-        this.tasks[
-          taskIdx
-        ].depth = 1
-        return 1
-      }
       let depth = 0
       for (var i = 0; i < task.prev_tasks.length; i++) {
-        const prevTaskIdx = this.tasks.findIndex(t => t.id === task.prev_tasks[i])
+        const prevTaskIdx = this.tasks.findIndex(t => t.id === task.prev_tasks[i].from_task_id)
         const prevTask = this.tasks[prevTaskIdx]
         if (!prevTask.depth) {
           prevTask.depth = this.calculateDepth(prevTask)
@@ -149,11 +150,46 @@ export default {
       return depth + 1
     },
     createTask (payload) {
-      console.log(payload)
       this.tasks.push(payload)
-      console.log(payload)
       this.calculateDepth(payload)
-      console.log(payload)
+    },
+    removeTask (taskId) {
+      this.tasks = this.tasks.filter(function (task) {
+        return task.id !== taskId
+      })
+    },
+    updateTask (payload) {
+      for (var i = 0; i < this.tasks.length; i++) {
+        if (this.tasks[i].id === payload.id) {
+          this.tasks.splice(i, 1, payload)
+          this.calculateDepth(this.tasks[i])
+        }
+      }
+    },
+    chainingTasks (payload) {
+      if (this.chaining) {
+        axios.post(`/projects/${this.project.id}/sequence?token=${this.authToken}`, {
+          to_task_id: payload,
+          from_task_id: this.firstChainedTaskId
+        })
+          .then(res => {
+            this.calculateDepth(this.tasks.find(t => t.id === res.data.to_task_id))
+            this.arrows.push(
+              new LeaderLine(
+                document.getElementById(`id${res.data.from_task_id}`),
+                document.getElementById(`id${res.data.to_task_id}`),
+                {
+                  color: '#7db7ff',
+                  startSocket: 'bottom',
+                  endSocket: 'top'
+                }
+              )
+            )
+          })
+      } else {
+        this.chaining = true
+        this.firstChainedTaskId = payload
+      }
     }
   },
   created () {
@@ -163,30 +199,31 @@ export default {
           alert(res.data.message)
         } else {
           this.project = res.data
-          axios.get(`/projects/${this.project.id}/goals/${this.$route.params.goal_id}?token=${this.authToken}`)
-            .then(res2 => {
-              this.goal = res2.data
-              axios.get(`/projects/${this.project.id}/goals/${this.goal.id}/tasks?token=${this.authToken}`)
-                .then(res3 => {
-                  this.tasks = res3.data
-                  for (var k = 0; k < this.tasks.length; k++) {
-                    this.calculateDepth(this.tasks[k])
-                  }
-                })
-            })
         }
       })
       .catch(res => {
         alert('Server-side error occurred. Try again later.')
       })
+    axios.get(`/projects/${this.$route.params.id}/goals/${this.$route.params.goal_id}?token=${this.authToken}`)
+      .then(res => {
+        this.goal = res.data
+      })
+    this.dataPromise = axios.get(`/projects/${this.$route.params.id}/goals/${this.$route.params.goal_id}/tasks?token=${this.authToken}`)
+      .then(res => {
+        this.tasks = res.data
+        for (var i = 0; i < this.tasks.length; i++) {
+          this.calculateDepth(this.tasks[i])
+        }
+      })
   },
-  mounted () {
+  async mounted () {
+    await this.dataPromise
     for (var i = 0; i < this.tasks.length; i++) {
       for (var j = 0; j < this.tasks[i].next_tasks.length; j++) {
         this.arrows.push(
           new LeaderLine(
             document.getElementById(`id${this.tasks[i].id}`),
-            document.getElementById(`id${this.tasks[i].next_tasks[j]}`),
+            document.getElementById(`id${this.tasks[i].next_tasks[j].to_task_id}`),
             {
               color: '#7db7ff',
               startSocket: 'bottom',
