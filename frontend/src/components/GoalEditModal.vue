@@ -1,5 +1,5 @@
 <template>
-  <div class="absolute inset-0 flex items-center justify-center">
+  <div class="absolute z-50 inset-0 flex items-center justify-center">
     <div class="fixed inset-0 h-full w-full opacity-75 bg-gray-900" @click="stopShowing"></div>
     <div class="px-3 py-2 fixed w-4/5 md:w-3/5 lg:w-1/2 bg-gray-100 rounded-lg shadow-lg pt-1 pb-2">
       <div class="flex items-center justify-between">

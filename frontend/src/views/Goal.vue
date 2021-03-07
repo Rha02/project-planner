@@ -30,7 +30,11 @@
       </div>
       <div class="py-2 text-xl text-center font-semibold flex justify-center z-20 relative bg-gray-200">
         Tasks: {{ tasks.length }}
-        <task-form :project="project" @addTask="createTask"></task-form>
+        <div class="mx-2 text-center text-xl text-blue-600 hover:text-blue-500 transition ease-in-out duration-150">
+          <button type="button" @click="creating_task = true" class="w-full">
+            <i class="far fa-plus-square"></i>
+          </button>
+        </div>
       </div>
       <div class="mx-4 py-2 bg-white shadow rounded-lg overflow-y-auto shadow-lg"
             style="height:75vh;"
@@ -54,6 +58,9 @@
     <div class="" v-if="inSettings">
       <goal-settings :goal="goal" @stopShowing="inSettings = false" @deleteGoal="deleteGoal()" @updateGoal="updateGoal"></goal-settings>
     </div>
+    <div class="" v-if="creating_task">
+      <task-form @stopShowing="creating_task = false" :project="project" @addTask="createTask"></task-form>
+    </div>
   </div>
 </template>
 
@@ -76,6 +83,7 @@ export default {
       goal: {},
       tasks: [],
       inSettings: false,
+      creating_task: false,
       chaining: false,
       firstChainedTaskId: null,
       dataPromise: null
@@ -133,7 +141,6 @@ export default {
       }
     },
     calculateDepth (task) {
-      const taskIdx = this.tasks.findIndex(t => t.id === task.id)
       let depth = 0
       for (var i = 0; i < task.prev_tasks.length; i++) {
         const prevTaskIdx = this.tasks.findIndex(t => t.id === task.prev_tasks[i].from_task_id)
@@ -141,17 +148,17 @@ export default {
         if (!prevTask.depth) {
           prevTask.depth = this.calculateDepth(prevTask)
           this.tasks[prevTaskIdx].depth = prevTask.depth
-        }
-        if (prevTask.depth > depth) {
+        } else if (prevTask.depth > depth) {
           depth = prevTask.depth
         }
       }
-      this.tasks[taskIdx].depth = depth + 1
+      this.tasks[this.tasks.findIndex(t => t.id === task.id)].depth = depth + 1
       return depth + 1
     },
     createTask (payload) {
       this.tasks.push(payload)
       this.calculateDepth(payload)
+      this.creating_task = false
     },
     removeTask (taskId) {
       this.tasks = this.tasks.filter(function (task) {
@@ -190,6 +197,19 @@ export default {
         this.chaining = true
         this.firstChainedTaskId = payload
       }
+    },
+    createArrowLines (sequence) {
+      this.arrows.push(
+        new LeaderLine(
+          document.getElementById(`id${sequence.from_task_id}`),
+          document.getElementById(`id${sequence.to_task_id}`),
+          {
+            color: '#7db7ff',
+            startSocket: 'bottom',
+            endSocket: 'top'
+          }
+        )
+      )
     }
   },
   created () {
@@ -220,17 +240,7 @@ export default {
     await this.dataPromise
     for (var i = 0; i < this.tasks.length; i++) {
       for (var j = 0; j < this.tasks[i].next_tasks.length; j++) {
-        this.arrows.push(
-          new LeaderLine(
-            document.getElementById(`id${this.tasks[i].id}`),
-            document.getElementById(`id${this.tasks[i].next_tasks[j].to_task_id}`),
-            {
-              color: '#7db7ff',
-              startSocket: 'bottom',
-              endSocket: 'top'
-            }
-          )
-        )
+        this.createArrowLines(this.tasks[i].next_tasks[j])
       }
     }
   },
