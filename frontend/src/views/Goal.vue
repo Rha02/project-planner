@@ -46,11 +46,12 @@
                 <task :id="`id${task.id}`"
                       :task="task"
                       :project="project"
-                      :chaining="chaining"
+                      :chain="chain"
                       @taskDeleted="removeTask"
                       @taskUpdated="updateTask"
                       @chainTasks="chainingTasks"
-                      @cancelChaining="chaining = false"></task>
+                      @breakSequence="breakSequence"
+                      @cancelChaining="resetChain()"></task>
               </div>
             </div>
           </div>
@@ -84,8 +85,10 @@ export default {
       tasks: [],
       inSettings: false,
       creating_task: false,
-      chaining: false,
-      firstChainedTaskId: null,
+      chain: {
+        isChaining: false,
+        firstChainedTaskId: null
+      },
       dataPromise: null
     }
   },
@@ -104,6 +107,27 @@ export default {
     }
   },
   methods: {
+    breakSequence (taskId) {
+      const taskIdx = this.tasks.findIndex(t => t.id === taskId)
+      for (var j = 0; j < this.arrows.length; j++) {
+        if (this.arrows[j].start === taskId || this.arrows[j].end === taskId) {
+          if (this.arrows[j].start === taskId) {
+            this.tasks[this.tasks.findIndex(t => t.id === this.arrows[j].end)].prev_tasks = []
+          } else {
+            this.tasks[this.tasks.findIndex(t => t.id === this.arrows[j].start)].next_tasks = []
+          }
+          this.arrows[j].line.remove()
+          this.arrows.splice(j, 1)
+          j--
+        }
+      }
+      this.tasks[taskIdx].prev_tasks = []
+      this.tasks[taskIdx].next_tasks = []
+    },
+    resetChain () {
+      this.chain.isChaining = false
+      this.chain.firstChainedTaskId = null
+    },
     updateGoal (payload) {
       axios.patch(`/projects/${this.project.id}/goals/${this.goal.id}?token=${this.authToken}`, {
         title: payload.title,
@@ -137,7 +161,7 @@ export default {
     },
     positionLines () {
       for (var i = 0; i < this.arrows.length; i++) {
-        this.arrows[i].position()
+        this.arrows[i].line.position()
       }
     },
     calculateDepth (task) {
@@ -174,41 +198,35 @@ export default {
       }
     },
     chainingTasks (payload) {
-      if (this.chaining) {
+      if (this.chain.isChaining) {
         axios.post(`/projects/${this.project.id}/sequence?token=${this.authToken}`, {
           to_task_id: payload,
-          from_task_id: this.firstChainedTaskId
+          from_task_id: this.chain.firstChainedTaskId
         })
           .then(res => {
             this.calculateDepth(this.tasks.find(t => t.id === res.data.to_task_id))
-            this.arrows.push(
-              new LeaderLine(
-                document.getElementById(`id${res.data.from_task_id}`),
-                document.getElementById(`id${res.data.to_task_id}`),
-                {
-                  color: '#7db7ff',
-                  startSocket: 'bottom',
-                  endSocket: 'top'
-                }
-              )
-            )
+            this.createArrowLines(res.data)
           })
       } else {
-        this.chaining = true
-        this.firstChainedTaskId = payload
+        this.chain.isChaining = true
+        this.chain.firstChainedTaskId = payload
       }
     },
     createArrowLines (sequence) {
       this.arrows.push(
-        new LeaderLine(
-          document.getElementById(`id${sequence.from_task_id}`),
-          document.getElementById(`id${sequence.to_task_id}`),
-          {
-            color: '#7db7ff',
-            startSocket: 'bottom',
-            endSocket: 'top'
-          }
-        )
+        {
+          line: new LeaderLine(
+            document.getElementById(`id${sequence.from_task_id}`),
+            document.getElementById(`id${sequence.to_task_id}`),
+            {
+              color: '#7db7ff',
+              startSocket: 'bottom',
+              endSocket: 'top'
+            }
+          ),
+          start: sequence.from_task_id,
+          end: sequence.to_task_id
+        }
       )
     }
   },
@@ -246,7 +264,7 @@ export default {
   },
   destroyed () {
     for (var i = 0; i < this.arrows.length; i++) {
-      this.arrows[i].remove()
+      this.arrows[i].line.remove()
     }
   }
 }

@@ -1,5 +1,5 @@
 <template>
-  <div class="absolute z-50 inset-0 flex items-center justify-center">
+  <div class="absolute z-50 inset-0 flex items-center justify-center text-gray-900">
     <div class="fixed inset-0 h-full w-full opacity-75 bg-gray-900" @click="stopShowing()"></div>
     <div class="fixed items-center bg-gray-100 rounded-lg px-3 py-2 w-4/5 md:w-3/5 lg:w-1/2">
       <div class="flex items-center justify-between">
@@ -31,6 +31,9 @@
         <option :value="null">Unassigned</option>
         <option v-for="member in project.members" :key="member.id" :value="member.id">{{ member.email }}</option>
       </select>
+      <div class="text-center text-lg mt-2">
+        <button type="button" @click="breakSequence()" class="mx-1 px-2 py-1 font-semibold rounded text-yellow-600 hover:text-orange-600 transition ease-in-out duration-150">Break Sequence</button>
+      </div>
       <div class="text-center text-lg mt-3 space-x-3">
         <button type="button" @click="updateTask()" class="mx-1 px-2 py-1 font-semibold rounded bg-blue-600 hover:bg-blue-500 text-white transition ease-in-out duration-150">Update</button>
         <button type="button" @click="removeTask()" class="mx-1 px-2 py-1 font-semibold rounded text-red-700 hover:text-red-600 transition ease-in-out duration-150">Delete</button>
@@ -60,6 +63,9 @@ export default {
     },
     removeTask () {
       this.$emit('removeTask')
+    },
+    breakSequence () {
+      this.$emit('breakSequence')
     }
   },
   created () {
