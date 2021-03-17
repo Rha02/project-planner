@@ -3,7 +3,7 @@
     <div class="bg-gray-100 shadow z-30 relative">
       <div class="mx-8 py-2 font-semibold">
         <div class="text-2xl  w-full">
-          <router-link :to="`/projects/${project.id}`" class="font-semibold text-blue-600 hover:underline">
+          <router-link :to="`/projects/${$route.params.id}`" class="font-semibold text-blue-600 hover:underline">
             {{ project.title }}
           </router-link>
         </div>
@@ -38,7 +38,7 @@
       </div>
       <div class="mx-4 py-2 bg-white shadow rounded-lg overflow-y-auto shadow-lg"
             style="height:75vh;"
-            v-on:scroll="positionLines()">
+            v-on:scroll="positionLines()" v-if="project.members">
           <div class="" v-for="leveledTasks in taskHierarchy" :key="leveledTasks[0].depth">
             <div class="mx-4 my-4 flex flex-wrap justify-around">
               <div class="w-1/4 mb-16 px-2 py-2 flex justify-center items-center"
@@ -77,19 +77,30 @@ export default {
     taskForm: TaskFormModal,
     task: Task
   },
+  props: {
+    project_param: Object,
+    goal_param: Object
+  },
   data () {
     return {
       arrows: [],
-      project: {},
-      goal: {},
       tasks: [],
+      project: {
+        title: 'PLACEHOLDER'
+      },
+      goal: {
+        title: 'PLACEHOLDER',
+        status: 'PLACEHOLDER'
+      },
       inSettings: false,
       creating_task: false,
       chain: {
         isChaining: false,
         firstChainedTaskId: null
       },
-      dataPromise: null
+      projectPromise: null,
+      goalPromise: null,
+      tasksPromise: null
     }
   },
   computed: {
@@ -230,37 +241,51 @@ export default {
       )
     }
   },
-  created () {
-    axios.get(`/projects/${this.$route.params.id}?token=${this.authToken}`)
-      .then(res => {
-        if (res.data.is_error) {
-          alert(res.data.message)
-        } else {
+  async created () {
+    console.log('created is called')
+    if (!this.project_param) {
+      console.log('entered created if-statement')
+      this.projectPromise = axios.get(`/projects/${this.$route.params.id}?token=${this.authToken}`)
+        .then(res => {
           this.project = res.data
-        }
-      })
-      .catch(res => {
-        alert('Server-side error occurred. Try again later.')
-      })
-    axios.get(`/projects/${this.$route.params.id}/goals/${this.$route.params.goal_id}?token=${this.authToken}`)
+        })
+        .catch(res => {
+          alert('An error has occurred?')
+        })
+      this.goalPromise = axios.get(`/projects/${this.$route.params.id}/goals/${this.$route.params.goal_id}?token=${this.authToken}`)
+        .then(res => {
+          this.goal = res.data
+        })
+        .catch(res => {
+          alert('An error has occurred?')
+        })
+      console.log('exit created if-statement')
+    } else {
+      this.project = this.project_param
+      this.goal = this.goal_param
+    }
+    this.tasksPromise = axios.get(`/projects/${this.$route.params.id}/goals/${this.$route.params.goal_id}/tasks?token=${this.authToken}`)
       .then(res => {
-        this.goal = res.data
-      })
-    this.dataPromise = axios.get(`/projects/${this.$route.params.id}/goals/${this.$route.params.goal_id}/tasks?token=${this.authToken}`)
-      .then(res => {
+        console.log('This must run first')
         this.tasks = res.data
         for (var i = 0; i < this.tasks.length; i++) {
           this.calculateDepth(this.tasks[i])
         }
       })
+    console.log('exiting created')
   },
   async mounted () {
-    await this.dataPromise
-    for (var i = 0; i < this.tasks.length; i++) {
-      for (var j = 0; j < this.tasks[i].next_tasks.length; j++) {
-        this.createArrowLines(this.tasks[i].next_tasks[j])
+    await this.projectPromise
+    await this.goalPromise
+    await this.tasksPromise
+    console.log('this must run second')
+    this.$nextTick(() => {
+      for (var i = 0; i < this.tasks.length; i++) {
+        for (var j = 0; j < this.tasks[i].next_tasks.length; j++) {
+          this.createArrowLines(this.tasks[i].next_tasks[j])
+        }
       }
-    }
+    })
   },
   destroyed () {
     for (var i = 0; i < this.arrows.length; i++) {

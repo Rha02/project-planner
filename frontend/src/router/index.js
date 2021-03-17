@@ -61,6 +61,7 @@ const routes = [
   },
   {
     path: '/projects/:id',
+    name: 'project',
     component: Project,
     beforeEnter (to, from, next) {
       if (store.state.authToken) {
@@ -68,10 +69,12 @@ const routes = [
       } else {
         next('/login')
       }
-    }
+    },
+    props: true
   },
   {
     path: '/projects/:id/goals/:goal_id',
+    name: 'goal',
     component: Goal,
     beforeEnter (to, from, next) {
       if (store.state.authToken) {
@@ -79,7 +82,8 @@ const routes = [
       } else {
         next('/login')
       }
-    }
+    },
+    props: true
   }
 ]
 
