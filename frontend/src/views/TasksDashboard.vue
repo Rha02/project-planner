@@ -163,7 +163,6 @@ export default {
         this.sortedTasks = res.data.filter(function (task) {
           return task.status !== 'complete'
         })
-        console.log('hello')
       })
   }
 }

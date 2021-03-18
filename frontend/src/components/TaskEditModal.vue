@@ -29,7 +29,7 @@
       </div>
       <select class="mt-2 bg-gray-300 rounded-md px-2 py-1" v-model="formData.user_id">
         <option :value="null">Unassigned</option>
-        <option v-for="member in project.members" :key="member.id" :value="member.id">{{ member.email }}</option>
+        <option v-for="member in members" :key="member.id" :value="member.id">{{ member.email }}</option>
       </select>
       <div class="text-center text-lg mt-2">
         <button type="button" @click="breakSequence()" class="mx-1 px-2 py-1 font-semibold rounded text-yellow-600 hover:text-orange-600 transition ease-in-out duration-150">Break Sequence</button>
@@ -44,7 +44,7 @@
 
 <script>
 export default {
-  props: ['task', 'project'],
+  props: ['task', 'members'],
   data () {
     return {
       formData: {

@@ -39,14 +39,9 @@ export default {
       title: ''
     }
   },
-  computed: {
-    authToken () {
-      return this.$store.state.authToken
-    }
-  },
   methods: {
     addGoal () {
-      axios.post(`/projects/${this.project.id}/goals?token=${this.authToken}`, {
+      axios.post(`/projects/${this.project.id}/goals?token=${this.$store.state.authToken}`, {
         status: this.status,
         title: this.title
       })

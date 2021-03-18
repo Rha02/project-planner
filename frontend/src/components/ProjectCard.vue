@@ -22,6 +22,3 @@ export default {
   props: ['project']
 }
 </script>
-
-<style lang="css" scoped>
-</style>

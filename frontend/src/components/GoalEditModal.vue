@@ -45,11 +45,6 @@ export default {
       }
     }
   },
-  computed: {
-    authToken () {
-      return this.$store.state.authToken
-    }
-  },
   created () {
     this.formData.title = this.goal.title
     this.formData.status = this.goal.status

@@ -60,7 +60,7 @@
           </div>
           <div v-for="goal in filteredgoals('unsigned')" :key="goal.id">
             <router-link :to="{ name: 'projects', params: { id: project.id, goal_id: goal.id, goal: goal, project: project} }">
-              <goal :goal="goal"></goal>
+              <goal :title="goal.title"></goal>
             </router-link>
           </div>
           <goalform @addGoal="createGoal" status="unsigned" :project="project"></goalform>
@@ -73,7 +73,7 @@
           </div>
           <div v-for="goal in filteredgoals('not_started')" :key="goal.id">
             <router-link :to="{ name: 'goal', params: { id: project.id, goal_id: goal.id, project: project, goal: goal } }">
-              <goal :goal="goal"></goal>
+              <goal :title="goal.title"></goal>
             </router-link>
           </div>
           <goalform @addGoal="createGoal" status="not_started" :project="project"></goalform>
@@ -86,7 +86,7 @@
           </div>
           <div v-for="goal in filteredgoals('in_progress')" :key="goal.id">
             <router-link :to="{ name: 'goal', params: { id: project.id, goal_id: goal.id, project: project, goal: goal } }">
-              <goal :goal="goal"></goal>
+              <goal :title="goal.title"></goal>
             </router-link>
           </div>
           <goalform @addGoal="createGoal" status="in_progress" :project="project"></goalform>
@@ -99,7 +99,7 @@
           </div>
           <div v-for="goal in filteredgoals('complete')" :key="goal.id">
             <router-link :to="{ name: 'goal', params: { id: project.id, goal_id: goal.id, project_param: project, goal_param: goal } }">
-              <goal :goal="goal"></goal>
+              <goal :title="goal.title"></goal>
             </router-link>
           </div>
           <goalform @addGoal="createGoal" status="complete" :project="project"></goalform>

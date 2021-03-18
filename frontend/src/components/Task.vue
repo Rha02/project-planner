@@ -26,7 +26,7 @@
       </div>
     </div>
     <div class="" v-if="editing">
-      <task-edit-modal :task="task" :project="project" @stopShowing="editing = false" @updateTask="updateTask" @removeTask="deleteTask" @breakSequence="breakSequence()"></task-edit-modal>
+      <task-edit-modal :task="task" :members="project.members" @stopShowing="editing = false" @updateTask="updateTask" @removeTask="deleteTask" @breakSequence="breakSequence()"></task-edit-modal>
     </div>
   </div>
 </template>

@@ -86,11 +86,11 @@ export default {
       arrows: [],
       tasks: [],
       project: {
-        title: 'PLACEHOLDER'
+        title: 'PROJECT'
       },
       goal: {
-        title: 'PLACEHOLDER',
-        status: 'PLACEHOLDER'
+        title: 'GOAL',
+        status: 'STATUS'
       },
       inSettings: false,
       creating_task: false,
@@ -242,9 +242,7 @@ export default {
     }
   },
   async created () {
-    console.log('created is called')
     if (!this.project_param) {
-      console.log('entered created if-statement')
       this.projectPromise = axios.get(`/projects/${this.$route.params.id}?token=${this.authToken}`)
         .then(res => {
           this.project = res.data
@@ -259,33 +257,27 @@ export default {
         .catch(res => {
           alert('An error has occurred?')
         })
-      console.log('exit created if-statement')
     } else {
       this.project = this.project_param
       this.goal = this.goal_param
     }
     this.tasksPromise = axios.get(`/projects/${this.$route.params.id}/goals/${this.$route.params.goal_id}/tasks?token=${this.authToken}`)
       .then(res => {
-        console.log('This must run first')
         this.tasks = res.data
         for (var i = 0; i < this.tasks.length; i++) {
           this.calculateDepth(this.tasks[i])
         }
       })
-    console.log('exiting created')
   },
   async mounted () {
     await this.projectPromise
     await this.goalPromise
     await this.tasksPromise
-    console.log('this must run second')
-    this.$nextTick(() => {
-      for (var i = 0; i < this.tasks.length; i++) {
-        for (var j = 0; j < this.tasks[i].next_tasks.length; j++) {
-          this.createArrowLines(this.tasks[i].next_tasks[j])
-        }
+    for (var i = 0; i < this.tasks.length; i++) {
+      for (var j = 0; j < this.tasks[i].next_tasks.length; j++) {
+        this.createArrowLines(this.tasks[i].next_tasks[j])
       }
-    })
+    }
   },
   destroyed () {
     for (var i = 0; i < this.arrows.length; i++) {
