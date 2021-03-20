@@ -2,17 +2,17 @@
 
 namespace Database\Factories;
 
-use App\Models\Task;
+use App\Models\Goal;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-class TaskFactory extends Factory
+class GoalFactory extends Factory
 {
     /**
      * The name of the factory's corresponding model.
      *
      * @var string
      */
-    protected $model = Task::class;
+    protected $model = Goal::class;
 
     /**
      * Define the model's default state.
@@ -22,9 +22,9 @@ class TaskFactory extends Factory
     public function definition()
     {
         return [
+            'title' => $this->faker->sentence,
             'status' => 'unsigned',
-            'body' => $this->faker->sentence,
-            'goal_id' => \App\Models\Goal::factory()
+            'project_id' => \App\Models\Project::factory()
         ];
     }
 }
