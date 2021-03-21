@@ -7,18 +7,17 @@ use App\Models\Sequence;
 use App\Models\Project;
 use App\Models\Task;
 use App\Http\Controllers\Controller;
-use App\Traits\ProjectRelated;
 
 class SequenceController extends Controller
 {
-  use ProjectRelated;
-
   protected $checkingSequences;
 
   protected $sequences;
 
   public function __construct()
   {
+    $this->middleware('member');
+
     $this->checkingSequences = collect([]);
 
     $this->sequences = Sequence::all();
@@ -26,12 +25,6 @@ class SequenceController extends Controller
 
   public function store(Project $project)
   {
-    $errorResponse = $this->authorized($project);
-
-    if ($errorResponse) {
-      return $errorResponse;
-    }
-
     $attributes = request()->validate([
       'to_task_id' => 'integer|exists:tasks,id|different:from_task_id',
       'from_task_id' => 'integer|exists:tasks,id|different:to_task_id'
@@ -62,8 +55,6 @@ class SequenceController extends Controller
 
   public function destroy(Project $project, Task $task)
   {
-    $this->authorized($project);
-
     Sequence::where('to_task_id', $task->id)->orWhere('from_task_id', $task->id)->delete();
 
     return 'Success';

@@ -9,31 +9,21 @@ use Illuminate\Support\Facades\Validator;
 use App\Models\Project;
 use App\Models\Goal;
 use App\Models\Task;
-use App\Traits\ProjectRelated;
 
 class TaskController extends Controller
 {
-    use ProjectRelated;
+    public function __construct()
+    {
+      $this->middleware('member');
+    }
 
     public function index(Project $project, Goal $goal)
     {
-      $errorRes = $this->authorized($project);
-
-      if ($errorRes) {
-        return $errorRes;
-      }
-
       return $goal->tasks->toArray();
     }
 
     public function store(Project $project, Goal $goal)
     {
-      $errorRes = $this->authorized($project);
-
-      if ($errorRes) {
-        return $errorRes;
-      }
-
       $validator = Validator::make(request()->all(), [
         'user_id' => ['nullable', Rule::in($project->members->pluck('id'))],
         'body' => 'required|string|max:3000',
@@ -62,12 +52,6 @@ class TaskController extends Controller
 
     public function destroy(Project $project, Goal $goal, Task $task)
     {
-      $errorRes = $this->authorized($project);
-
-      if ($errorRes) {
-        return $errorRes;
-      }
-
       $task->delete();
 
       return 'Success';
@@ -75,12 +59,6 @@ class TaskController extends Controller
 
     public function update(Project $project, Goal $goal, Task $task)
     {
-      $errorRes = $this->authorized($project);
-
-      if ($errorRes) {
-        return $errorRes;
-      }
-
       $validator = Validator::make(request()->all(), [
         'user_id' => ['nullable', Rule::in($project->members->pluck('id'))],
         'body' => 'required|string|max:3000',

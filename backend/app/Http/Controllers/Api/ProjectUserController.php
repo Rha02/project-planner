@@ -13,13 +13,13 @@ class ProjectUserController extends Controller
 
     public function __construct()
     {
+      $this->middleware('member');
+
       $this->user = auth()->user();
     }
 
     public function store(Project $project)
     {
-      $this->authorized($project);
-
       $member = User::where('email', request('email'))->first();
 
       if (! $member) {
@@ -55,8 +55,6 @@ class ProjectUserController extends Controller
 
     public function destroy(Project $project)
     {
-      $this->authorized($project);
-
       $member = User::where('email', request('email'))->first();
 
       if (!$member || !$project->members->contains($member)) {
