@@ -11,7 +11,7 @@ use App\Traits\ProjectRelated;
 class ProjectController extends Controller
 {
     use ProjectRelated;
-    
+
     protected $user;
 
     public function __construct()
@@ -35,7 +35,11 @@ class ProjectController extends Controller
 
     public function show(Project $project)
     {
-      $this->authorized($project);
+      $errorRes = $this->authorized($project);
+
+      if ($errorRes) {
+        return $errorRes;
+      }
 
       return $project->toArray();
     }
@@ -64,7 +68,11 @@ class ProjectController extends Controller
 
     public function update(Project $project)
     {
-      $this->authorized($project);
+      $errorRes = $this->authorized($project);
+
+      if ($errorRes) {
+        return $errorRes;
+      }
 
       $attributes = $this->validateProjectRequest();
 

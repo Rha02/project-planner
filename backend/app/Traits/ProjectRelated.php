@@ -6,7 +6,7 @@ use App\Models\Project;
 trait ProjectRelated {
   protected function authorized(Project $project)
   {
-    if ($project->members->contains(auth()->user())) {
+    if (! $project->members->contains(auth()->user())) {
       return response()->json([
         'is_error' => true,
         'message' => 'You are not authorized for this action.'

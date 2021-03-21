@@ -26,7 +26,11 @@ class SequenceController extends Controller
 
   public function store(Project $project)
   {
-    $this->authorized($project);
+    $errorResponse = $this->authorized($project);
+
+    if ($errorResponse) {
+      return $errorResponse;
+    }
 
     $attributes = request()->validate([
       'to_task_id' => 'integer|exists:tasks,id|different:from_task_id',

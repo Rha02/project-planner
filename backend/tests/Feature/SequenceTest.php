@@ -6,6 +6,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 use App\Models\Task;
 use App\Models\Goal;
+use App\Models\Project;
 
 class SequenceTest extends TestCase
 {
@@ -14,12 +15,33 @@ class SequenceTest extends TestCase
      *
      * @return void
      */
-    public function testCreateSequence()
+    public function testCreatingSequence()
     {
       $this->signIn();
 
-      $goal = Goal::factory()->create();
+      $project = Project::factory()->create([
+        'user_id' => auth()->id()
+      ]);
 
-      // TODO: CREATE MORE TESTS FOR SEQUENCE API
+      $project->members()->attach(auth()->id());
+
+      $goal = Goal::factory()->create([
+        'project_id' => $project->id
+      ]);
+
+      $tasks = Task::factory()->count(2)->create([
+        'goal_id' => $goal->id
+      ])->toArray();
+
+      $attributes = [
+        'from_task_id' => $tasks[0]['id'],
+        'to_task_id' => $tasks[1]['id']
+      ];
+
+      $this->assertDatabaseMissing('sequences', $attributes);
+
+      $this->post("/api/projects/{$goal->project_id}/sequence", $attributes);
+
+      $this->assertDatabaseHas('sequences', $attributes);
     }
 }

@@ -16,14 +16,22 @@ class GoalController extends Controller
 
     public function index(Project $project)
     {
-      $this->authorized($project);
+      $errorRes = $this->authorized($project);
+
+      if ($errorRes) {
+        return $errorRes;
+      }
 
       return $project->goals->toArray();
     }
 
     public function store(Project $project)
     {
-      $this->authorized($project);
+      $errorRes = $this->authorized($project);
+
+      if ($errorRes) {
+        return $errorRes;
+      }
 
       $validator = Validator::make(request()->all(), [
         'title' => 'required|string|max:3000',
@@ -52,7 +60,11 @@ class GoalController extends Controller
 
     public function destroy(Project $project, Goal $goal)
     {
-      $this->authorized($project);
+      $errorRes = $this->authorized($project);
+
+      if ($errorRes) {
+        return $errorRes;
+      }
 
       $goal->delete();
 
@@ -61,7 +73,11 @@ class GoalController extends Controller
 
     public function update(Project $project, Goal $goal)
     {
-      $this->authorized($project);
+      $errorRes = $this->authorized($project);
+
+      if ($errorRes) {
+        return $errorRes;
+      }
 
       $validator = Validator::make(request()->all(), [
         'title' => 'required|string|max:3000',
@@ -88,7 +104,11 @@ class GoalController extends Controller
 
     public function show(Project $project, Goal $goal)
     {
-      $this->authorized($project);
+      $errorRes = $this->authorized($project);
+
+      if ($errorRes) {
+        return $errorRes;
+      }
 
       return $goal->toArray();
     }

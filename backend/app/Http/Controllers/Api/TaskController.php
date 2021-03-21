@@ -17,14 +17,22 @@ class TaskController extends Controller
 
     public function index(Project $project, Goal $goal)
     {
-      $this->authorized($project);
+      $errorRes = $this->authorized($project);
+
+      if ($errorRes) {
+        return $errorRes;
+      }
 
       return $goal->tasks->toArray();
     }
 
     public function store(Project $project, Goal $goal)
     {
-      $this->authorized($project);
+      $errorRes = $this->authorized($project);
+
+      if ($errorRes) {
+        return $errorRes;
+      }
 
       $validator = Validator::make(request()->all(), [
         'user_id' => ['nullable', Rule::in($project->members->pluck('id'))],
@@ -54,7 +62,11 @@ class TaskController extends Controller
 
     public function destroy(Project $project, Goal $goal, Task $task)
     {
-      $this->authorized($project);
+      $errorRes = $this->authorized($project);
+
+      if ($errorRes) {
+        return $errorRes;
+      }
 
       $task->delete();
 
@@ -63,7 +75,11 @@ class TaskController extends Controller
 
     public function update(Project $project, Goal $goal, Task $task)
     {
-      $this->authorized($project);
+      $errorRes = $this->authorized($project);
+
+      if ($errorRes) {
+        return $errorRes;
+      }
 
       $validator = Validator::make(request()->all(), [
         'user_id' => ['nullable', Rule::in($project->members->pluck('id'))],
