@@ -55,22 +55,6 @@ class ProjectMemberTest extends TestCase
       ]);
     }
 
-    public function testGuestCannotAddMembers()
-    {
-      $project = Project::factory()->create();
-
-      $user = User::factory()->create();
-
-      $this->post("/api/projects/{$project->id}/members", [
-        'email' => $user->email
-      ]);
-
-      $this->assertDatabaseMissing('project_user', [
-        'project_id' => $project->id,
-        'user_id' => $user->id
-      ]);
-    }
-
     public function testMemberCannotAddMembers()
     {
       $project = Project::factory()->create();
@@ -134,24 +118,6 @@ class ProjectMemberTest extends TestCase
       ]);
     }
 
-    public function testGuestCannotRemoveMembers()
-    {
-      $project = Project::factory()->create();
-
-      $user = User::factory()->create();
-
-      $project->members()->attach($user->id);
-
-      $this->delete("/api/projects/{$project->id}/members", [
-        'email' => $user->email
-      ]);
-
-      $this->assertDatabaseHas('project_user', [
-        'project_id' => $project->id,
-        'user_id' => $user->id
-      ]);
-    }
-
     public function testMemberCannotRemoveMembers()
     {
       $project = Project::factory()->create();
@@ -196,15 +162,5 @@ class ProjectMemberTest extends TestCase
 
       $this->get("/api/projects/{$project->id}/members")
         ->assertJson($project->members->toArray());
-    }
-
-    public function testGuestsCannotSeeMembers()
-    {
-      $this->withoutExceptionHandling();
-
-      $project = Project::factory()->create();
-
-      $response = $this->get("/api/projects/{$project->id}/members")
-        ->assertJson(["error" => "Unauthorized"]);
     }
 }

@@ -65,26 +65,6 @@ class GoalTest extends TestCase
       ]);
     }
 
-    public function testGuestsCannotCreateGoal()
-    {
-      $project = Project::factory()->create();
-
-      $this->assertDatabaseMissing('goals', [
-        'title' => 'goal1',
-        'status' => 'not_started'
-      ]);
-
-      $this->post("/api/projects/{$project->id}/goals", [
-        'title' => 'goal1',
-        'status' => 'not_started'
-      ]);
-
-      $this->assertDatabaseMissing('goals', [
-        'title' => 'goal1',
-        'status' => 'not_started'
-      ]);
-    }
-
     public function testUnauthorizedUserCannotCreateGoal()
     {
       $project = Project::factory()->create();
@@ -153,23 +133,6 @@ class GoalTest extends TestCase
       ]);
     }
 
-    public function testGuestCannotUpdateGoal()
-    {
-      $project = Project::factory()->create();
-
-      $goal = Goal::factory()->create();
-
-      $this->patch("/api/projects/{$project->id}/goals/{$goal->id}", [
-        'title' => 'goal2',
-        'status' => 'in_progress'
-      ]);
-
-      $this->assertDatabaseMissing('goals', [
-        'title' => 'goal2',
-        'status' => 'in_progress'
-      ]);
-    }
-
     public function testUnauthorizedUserCannotUpdateGoal()
     {
       $project = Project::factory()->create();
@@ -222,22 +185,6 @@ class GoalTest extends TestCase
       $this->delete("/api/projects/{$project->id}/goals/{$goal->id}");
 
       $this->assertDatabaseMissing('goals', [
-        'title' => $goal->title,
-        'status' => $goal->status
-      ]);
-    }
-
-    public function testGuestCannotDeleteGoal()
-    {
-      $project = Project::factory()->create();
-
-      $goal = Goal::factory()->create([
-        'project_id' => $project->id
-      ]);
-
-      $this->delete("/api/projects/{$project->id}/goals/{$goal->id}");
-
-      $this->assertDatabaseHas('goals', [
         'title' => $goal->title,
         'status' => $goal->status
       ]);

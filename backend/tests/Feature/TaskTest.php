@@ -91,25 +91,6 @@ class TaskTest extends TestCase
       ]);
     }
 
-    public function testGuestCannotCreateTask()
-    {
-      $project = Project::factory()->create();
-
-      $goal = Goal::factory()->create([
-        'project_id' => $project->id
-      ]);
-
-      $this->post("/api/projects/{$project->id}/goals/{$goal->id}/tasks", [
-        'body' => 'body1',
-        'status' => 'not_started'
-      ]);
-
-      $this->assertDatabaseMissing('tasks', [
-        'body' => 'body1',
-        'status' => 'not_started'
-      ]);
-    }
-
     public function testOwnerCanUpdateTask()
     {
       $this->signIn();
@@ -158,29 +139,6 @@ class TaskTest extends TestCase
       ]);
 
       $this->assertDatabaseHas('tasks', ['body' => 'task1']);
-    }
-
-    public function testGuestCannotUpdateTask()
-    {
-      $project = Project::factory()->create();
-
-      $goal = Goal::factory()->create([
-        'project_id' => $project->id
-      ]);
-
-      $task = Task::factory()->create([
-        'goal_id' => $goal->id
-      ]);
-
-      $this->patch("/api/projects/{$project->id}/goals/{$goal->id}/tasks/{$task->id}", [
-        'body' => 'task1',
-        'status' => 'not_started'
-      ]);
-
-      $this->assertDatabaseMissing('tasks', [
-        'body' => 'task1',
-        'status' => 'not_started'
-      ]);
     }
 
     public function testUnauthorizedUserCannotUpdateTask()
@@ -250,23 +208,6 @@ class TaskTest extends TestCase
       $this->delete("/api/projects/{$project->id}/goals/{$goal->id}/tasks/{$task->id}");
 
       $this->assertDatabaseCount('tasks', 0);
-    }
-
-    public function testGuestCannotDeleteTask()
-    {
-      $project = Project::factory()->create();
-
-      $goal = Goal::factory()->create([
-        'project_id' => $project->id
-      ]);
-
-      $task = Task::factory()->create([
-        'goal_id' => $goal->id
-      ]);
-
-      $this->delete("/api/projects/{$project->id}/goals/{$goal->id}/tasks/{$task->id}");
-
-      $this->assertDatabaseCount('tasks', 1);
     }
 
     public function testUnauthorizedUserCannotDeleteTask()

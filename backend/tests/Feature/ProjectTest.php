@@ -27,15 +27,6 @@ class ProjectTest extends TestCase
       $this->assertDatabaseCount('projects', 1);
     }
 
-    public function testGuestCannotCreateProject()
-    {
-      $this->assertDatabaseCount('projects', 0);
-
-      $this->post("/api/projects");
-
-      $this->assertDatabaseCount('projects', 0);
-    }
-
     public function testOwnerCanDeleteProject()
     {
       $this->signIn();
@@ -58,17 +49,6 @@ class ProjectTest extends TestCase
       $project = Project::factory()->create();
 
       $project->members()->attach(auth()->id());
-
-      $this->assertDatabaseCount('projects', 1);
-
-      $this->delete("/api/projects/{$project->id}");
-
-      $this->assertDatabaseCount('projects', 1);
-    }
-
-    public function testGuestCannotDeleteProject()
-    {
-      $project = Project::factory()->create();
 
       $this->assertDatabaseCount('projects', 1);
 
@@ -124,18 +104,6 @@ class ProjectTest extends TestCase
       $this->patch("/api/projects/{$project->id}", [
         "title" => "test2",
         "description" => "testing2"
-      ]);
-
-      $this->assertSame($project->title, $project->fresh()->title);
-    }
-
-    public function testGuestCannotUpdateProject()
-    {
-      $project = Project::factory()->create();
-
-      $this->patch("/api/projects/{$project->id}", [
-        "title" => "test",
-        "description" => "testing"
       ]);
 
       $this->assertSame($project->title, $project->fresh()->title);
