@@ -98,7 +98,7 @@
             Completed
           </div>
           <div v-for="goal in filteredgoals('complete')" :key="goal.id">
-            <router-link :to="{ name: 'goal', params: { id: project.id, goal_id: goal.id, project_param: project, goal_param: goal } }">
+            <router-link :to="{ name: 'goal', params: { id: project.id, goal_id: goal.id, project_param: project, goal_param: goal, members_param: members } }">
               <goal :title="goal.title"></goal>
             </router-link>
           </div>
@@ -107,7 +107,7 @@
       </div>
     </div>
     <div class="" v-if="inSettings">
-      <settings-modal :project="project" @addMember="addMember" @removeMember="removeMember" @deleteProject="deleteProject" @stopShowing="inSettings = false"></settings-modal>
+      <settings-modal :project="project" :members="members" @addMember="addMember" @removeMember="removeMember" @deleteProject="deleteProject" @stopShowing="inSettings = false"></settings-modal>
     </div>
   </div>
 </template>
@@ -126,6 +126,7 @@ export default {
   data () {
     return {
       project: {},
+      members: [],
       editing_title: false,
       editing_description: false,
       inSettings: false,
@@ -156,10 +157,10 @@ export default {
       })
     },
     addMember (payload) {
-      this.project.members.push(payload)
+      this.members.push(payload)
     },
     removeMember (email) {
-      this.project.members = this.project.members.filter(function (member) {
+      this.members = this.members.filter(function (member) {
         return member.email !== email
       })
     },
@@ -232,6 +233,10 @@ export default {
           axios.get(`/projects/${this.project.id}/goals?token=${this.authToken}`)
             .then(res2 => {
               this.goals = res2.data
+            })
+          axios.get(`/projects/${this.project.id}/members?token=${this.authToken}`)
+            .then(res3 => {
+              this.members = res3.data
             })
         }
       })

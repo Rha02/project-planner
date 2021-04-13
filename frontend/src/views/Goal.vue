@@ -38,7 +38,7 @@
       </div>
       <div class="mx-4 py-2 bg-white shadow rounded-lg overflow-y-auto shadow-lg"
             style="height:75vh;"
-            v-on:scroll="positionLines()" v-if="project.members">
+            v-on:scroll="positionLines()" v-if="tasks">
           <div class="" v-for="leveledTasks in taskHierarchy" :key="leveledTasks[0].depth">
             <div class="mx-4 my-4 flex flex-wrap justify-around">
               <div class="w-1/4 mb-16 px-2 py-2 flex justify-center items-center"
@@ -46,6 +46,7 @@
                 <task :id="`id${task.id}`"
                       :task="task"
                       :project="project"
+                      :members="members"
                       :chain="chain"
                       @taskDeleted="removeTask"
                       @taskUpdated="updateTask"
@@ -60,7 +61,7 @@
       <goal-settings :goal="goal" @stopShowing="inSettings = false" @deleteGoal="deleteGoal()" @updateGoal="updateGoal"></goal-settings>
     </div>
     <div class="" v-if="creating_task">
-      <task-form @stopShowing="creating_task = false" :project="project" @addTask="createTask"></task-form>
+      <task-form @stopShowing="creating_task = false" :project="project" :members="members" @addTask="createTask"></task-form>
     </div>
   </div>
 </template>
@@ -79,7 +80,8 @@ export default {
   },
   props: {
     project_param: Object,
-    goal_param: Object
+    goal_param: Object,
+    members_param: Array
   },
   data () {
     return {
@@ -92,6 +94,7 @@ export default {
         title: 'GOAL',
         status: 'STATUS'
       },
+      members: [],
       inSettings: false,
       creating_task: false,
       chain: {
@@ -100,7 +103,8 @@ export default {
       },
       projectPromise: null,
       goalPromise: null,
-      tasksPromise: null
+      tasksPromise: null,
+      membersPromise: null
     }
   },
   computed: {
@@ -257,9 +261,17 @@ export default {
         .catch(res => {
           alert('An error has occurred?')
         })
+      this.membersPromise = axios.get(`/projects/${this.$route.params.id}/members?token=${this.authToken}`)
+        .then(res => {
+          this.members = res.data
+        })
+        .catch(res => {
+          alert('An error has occurred?')
+        })
     } else {
       this.project = this.project_param
       this.goal = this.goal_param
+      this.members = this.members_param
     }
     this.tasksPromise = axios.get(`/projects/${this.$route.params.id}/goals/${this.$route.params.goal_id}/tasks?token=${this.authToken}`)
       .then(res => {
@@ -272,6 +284,7 @@ export default {
   async mounted () {
     await this.projectPromise
     await this.goalPromise
+    await this.membersPromise
     await this.tasksPromise
     for (var i = 0; i < this.tasks.length; i++) {
       for (var j = 0; j < this.tasks[i].next_tasks.length; j++) {

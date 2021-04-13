@@ -26,7 +26,7 @@
       </div>
     </div>
     <div class="" v-if="editing">
-      <task-edit-modal :task="task" :members="project.members" @stopShowing="editing = false" @updateTask="updateTask" @removeTask="deleteTask" @breakSequence="breakSequence()"></task-edit-modal>
+      <task-edit-modal :task="task" :members="members" @stopShowing="editing = false" @updateTask="updateTask" @removeTask="deleteTask" @breakSequence="breakSequence()"></task-edit-modal>
     </div>
   </div>
 </template>
@@ -35,7 +35,7 @@
 import TaskEditModal from '../components/TaskEditModal.vue'
 import axios from 'axios'
 export default {
-  props: ['task', 'project', 'chain'],
+  props: ['task', 'project', 'chain', 'members'],
   components: {
     taskEditModal: TaskEditModal
   },
@@ -54,9 +54,9 @@ export default {
         this.task.prev_tasks.some(sequence => sequence.from_task_id === this.chain.firstChainedTaskId)
     },
     assignedUser () {
-      for (var i = 0; i < this.project.members.length; i++) {
-        if (this.project.members[i].id === this.task.user_id) {
-          return this.project.members[i].email
+      for (var i = 0; i < this.members.length; i++) {
+        if (this.members[i].id === this.task.user_id) {
+          return this.members[i].email
         }
       }
       return 'Nobody'

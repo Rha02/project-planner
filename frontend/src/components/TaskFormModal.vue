@@ -29,7 +29,7 @@
       </div>
       <select class="mt-2 bg-gray-300 rounded-md px-2 py-1" v-model="assigned_user">
         <option :value="null">Unassigned</option>
-        <option v-for="member in project.members" :key="member.id" :value="member.id">{{ member.email }}</option>
+        <option v-for="member in members" :key="member.id" :value="member.id">{{ member.email }}</option>
       </select>
       <div class="text-center text-lg mt-2">
         <button type="button" @click="addTask()" class="mx-1 px-2 py-1 font-semibold rounded bg-blue-600 hover:bg-blue-500 text-white transition ease-in-out duration-150">Create</button>
@@ -41,7 +41,7 @@
 <script>
 import axios from 'axios'
 export default {
-  props: ['project'],
+  props: ['project', 'members'],
   data () {
     return {
       body: '',

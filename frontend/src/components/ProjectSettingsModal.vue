@@ -16,9 +16,9 @@
       </div>
       <ul class="text-gray-800 text-lg">
         <li>
-          {{ project.members[0].email }} <span class="ml-1 text-yellow-700"><i class="fas fa-crown"></i></span>
+          {{ members[0].email }} <span class="ml-1 text-yellow-700"><i class="fas fa-crown"></i></span>
         </li>
-        <li v-for="member in this.project.members.slice(1)" :key="member.name">
+        <li v-for="member in this.members.slice(1)" :key="member.name">
           {{ member.email }}
           <button @click="removeMember(member.email)" class="px-1 text-gray-800 hover:text-red-700 transition ease-in-out duration-150" v-if="isOwner">
             <i class="fas fa-times"></i>
@@ -54,7 +54,7 @@ function ifEmailRepeats (users, email) {
   return false
 }
 export default {
-  props: ['project'],
+  props: ['project', 'members'],
   data () {
     return {
       isOwner: false
@@ -66,7 +66,7 @@ export default {
     }
   },
   created () {
-    if (this.project.members[0].email === this.$store.state.user.email) {
+    if (this.members[0].email === this.$store.state.user.email) {
       this.isOwner = true
     }
   },
@@ -78,7 +78,7 @@ export default {
           if (res.data.is_error) {
             alert(res.data.message)
           } else {
-            if (ifEmailRepeats(this.project.members, res.data.email)) {
+            if (ifEmailRepeats(this.members, res.data.email)) {
               alert('This user is already a member of this project')
             } else {
               document.getElementById('memberInput').value = ''
