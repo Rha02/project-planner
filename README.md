@@ -33,9 +33,11 @@ The leaders and the members can assign the task to someone, as long as that some
 In the list of members, the users can tell who the project leader is by looking at the crown that's next to the name of the leader.
 
 ## Security/Privacy
-After creating a project, only the creator has access to view and modify it. The project is restricted from viewing or modifying for any other person, unless the creator shared the project with them. Removing members from the team restricts them from accessing the project. Only the people that users chooses can access the project.
+After creating a project, only the creator has access to view and modify it. The project is restricted from viewing or modifying for any other person, unless the creator shared the project with them. Removing members from the team restricts them from accessing the project. Only the people that the user chooses can access the user's project.
 
 ## Packages installed:
 **Tailwind CSS** - for a nice-looking web design
 
-**jwt-auth** - creating a secure connection between the backend and the frontend
+**jwt-auth** - for creating a secure connection between the backend and the frontend
+
+**leader-line** - for creating dynamic and configurable arrows on the frontend
