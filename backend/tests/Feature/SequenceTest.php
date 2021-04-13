@@ -15,7 +15,9 @@ class SequenceTest extends TestCase
      *
      * @return void
      */
-    public function testCreatingSequence()
+    use RefreshDatabase;
+
+    public function testCreatingAndDeletingSequence()
     {
       $this->signIn();
 
@@ -40,8 +42,12 @@ class SequenceTest extends TestCase
 
       $this->assertDatabaseMissing('sequences', $attributes);
 
-      $this->post("/api/projects/{$goal->project_id}/sequence", $attributes);
+      $this->post("/api/projects/{$goal->project_id}/sequence", $attributes)->assertSuccessful();
 
       $this->assertDatabaseHas('sequences', $attributes);
+
+      $this->delete("/api/projects/{$project->id}/sequence/{$attributes['from_task_id']}");
+
+      $this->assertDatabaseMissing('sequences', $attributes);
     }
 }

@@ -13,13 +13,18 @@ class ProjectUserController extends Controller
 
     public function __construct()
     {
-      $this->middleware('member');
-
       $this->user = auth()->user();
     }
 
     public function store(Project $project)
     {
+      if (auth()->id() != $project->user_id) {
+        return response()->json([
+          'is_error' => true,
+          'message' => 'You are not authorized for this action.'
+        ]);
+      }
+
       $member = User::where('email', request('email'))->first();
 
       if (! $member) {
@@ -55,6 +60,13 @@ class ProjectUserController extends Controller
 
     public function destroy(Project $project)
     {
+      if (auth()->id() != $project->user_id) {
+        return response()->json([
+          'is_error' => true,
+          'message' => 'You are not authorized for this action.'
+        ]);
+      }
+
       $member = User::where('email', request('email'))->first();
 
       if (!$member || !$project->members->contains($member)) {
