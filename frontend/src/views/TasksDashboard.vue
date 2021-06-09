@@ -95,10 +95,18 @@
           </div>
         </div>
       </div>
-      <div class="mx-8 space-y-2">
-        <div class="" v-for="task in sortedTasks" :key="task.id">
-          <task :task="task"></task>
+      <div class="mx-8 space-y-2" v-if="tasks.length">
+        <div v-if="sortedTasks.length">
+          <div class="" v-for="task in sortedTasks" :key="task.id">
+            <task :task="task"></task>
+          </div>
         </div>
+        <div v-else>
+          None of the tasks match this filter.
+        </div>
+      </div>
+      <div class="mx-8 space-y-2" v-else>
+        There aren't any tasks assigned to you.
       </div>
     </div>
 </template>

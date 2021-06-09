@@ -59,7 +59,7 @@
             No Status
           </div>
           <div v-for="goal in filteredgoals('unsigned')" :key="goal.id">
-            <router-link :to="{ name: 'projects', params: { id: project.id, goal_id: goal.id, goal: goal, project: project} }">
+            <router-link :to="{ name: 'goal', params: { id: project.id, goal_id: goal.id, goal: goal, project: project} }">
               <goal :title="goal.title"></goal>
             </router-link>
           </div>

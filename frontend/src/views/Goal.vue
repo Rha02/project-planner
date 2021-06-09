@@ -38,7 +38,7 @@
       </div>
       <div class="mx-4 py-2 bg-white shadow rounded-lg overflow-y-auto shadow-lg"
             style="height:75vh;"
-            v-on:scroll="positionLines()" v-if="tasks">
+            v-on:scroll="positionLines()" v-if="tasks.length">
           <div class="" v-for="leveledTasks in taskHierarchy" :key="leveledTasks[0].depth">
             <div class="mx-4 my-4 flex flex-wrap justify-around">
               <div class="w-1/4 mb-16 px-2 py-2 flex justify-center items-center"
@@ -56,6 +56,9 @@
               </div>
             </div>
           </div>
+      </div>
+      <div class="mx-8" v-else>
+        There are no tasks for this goal.
       </div>
     <div class="" v-if="inSettings">
       <goal-settings :goal="goal" @stopShowing="inSettings = false" @deleteGoal="deleteGoal()" @updateGoal="updateGoal"></goal-settings>
