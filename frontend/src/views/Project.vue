@@ -1,49 +1,49 @@
 <template>
-  <div class="justify-center text-gray-900 bg-gray-200 h-full">
-    <div class="bg-gray-100">
-      <div class="mx-8 py-3 font-semibold flex justify-between">
-        <div class="text-2xl text-gray-700" v-if="editing_title">
-          <input class="text-gray-900 bg-gray-100 w-3/4 px-1" ref="title" v-model="formData.title">
-          <span class="ml-1 space-x-1 text-lg">
-            <button type="button" @click="editing_title = false" class="px-2 hover:bg-red-600 rounded-lg hover:text-white transition ease-in-out duration-150">
-              <i class="fas fa-times"></i>
-            </button>
-            <button type="button" @click="updateProjectTitle()" class="px-1 hover:bg-green-600 rounded-lg hover:text-white transition ease-in-out duration-150">
-              <i class="fas fa-check"></i>
-            </button>
-          </span>
+  <div class="justify-center text-gray-900 bg-gray-100 h-full">
+    <div class="bg-white shadow px-6 py-3 text-gray-900 text-2xl font-semibold flex justify-between">
+        <div>
+          <div v-if="editing_title">
+            <input class="w-3/4 px-1" ref="title" v-model="formData.title">
+            <span class="ml-1 space-x-1 text-lg">
+              <button type="button" @click="editing_title = false" class="px-2 hover:bg-red-500 rounded-lg text-red-500 hover:text-white transition ease-in-out duration-150">
+                <i class="fas fa-times"></i>
+              </button>
+              <button type="button" @click="updateProjectTitle()" class="px-1 hover:bg-green-500 rounded-lg text-green-500 hover:text-white transition ease-in-out duration-150">
+                <i class="fas fa-check"></i>
+              </button>
+            </span>
+          </div>
+          <div v-else>
+            <span>{{ project.title }}</span>
+            <span class="ml-1 text-lg">
+              <button type="button" @click="editTitle()" class="px-1 text-gray-700 bg-gray-200 hover:bg-white hover:text-indigo-600 rounded-lg transition ease-in-out duration-150">
+                <i class="fas fa-pen"></i>
+              </button>
+            </span>
+          </div>
         </div>
-        <div class="text-2xl text-gray-700 lg:text-gray-100 hover:text-gray-700 w-full" v-else>
-          <span class="text-gray-900">{{ project.title }}</span>
-          <span class="ml-1 text-lg">
-            <button type="button" @click="editTitle()" class="px-1 hover:bg-gray-400 hover:text-purple-700 rounded-lg transition ease-in-out duration-150">
-              <i class="fas fa-pen"></i>
-            </button>
-          </span>
-        </div>
-        <div class="flex-none text-gray-700 text-2xl">
-          <button type="button" @click="inSettings = true" class="px-2 hover:bg-gray-400 hover:text-purple-700 rounded-lg transition ease-in-out duration-150">
+        <div class="flex-none text-gray-700">
+          <button type="button" @click="inSettings = true" class="px-2 bg-gray-200 hover:bg-white hover:text-indigo-600 rounded-lg transition ease-in-out duration-150">
             <i class="fas fa-cog"></i>
           </button>
         </div>
-      </div>
     </div>
-    <div class="mx-8">
-      <div class="text-gray-700 mt-1" v-if="editing_description">
-        <textarea class="text-gray-900 bg-gray-200 w-2/3 px-1" ref="description" v-model="formData.description"></textarea>
+    <div class="px-6 py-1">
+      <div v-if="editing_description">
+        <textarea class="bg-gray-100 w-2/3 px-1" ref="description" v-model="formData.description"></textarea>
         <span class="ml-1">
-          <button type="button" @click="editing_description = false" class="px-2 hover:bg-red-600 rounded-lg hover:text-white transition ease-in-out duration-150">
+          <button type="button" @click="editing_description = false" class="px-2 hover:bg-red-500 rounded-lg text-red-500 hover:text-white transition ease-in-out duration-150">
             <i class="fas fa-times"></i>
           </button>
-          <button type="button" @click="updateProjectDescription()" class="px-1 hover:bg-green-600 rounded-lg hover:text-white transition ease-in-out duration-150">
+          <button type="button" @click="updateProjectDescription()" class="px-1 hover:bg-green-500 rounded-lg text-green-500 hover:text-white transition ease-in-out duration-150">
             <i class="fas fa-check"></i>
           </button>
         </span>
       </div>
-      <div class="text-gray-700 lg:text-gray-200 hover:text-gray-700 mt-1" v-else>
-        <span class="text-gray-800">{{ project.description }}</span>
+      <div v-else>
+        <span>{{ project.description }}</span>
         <span class="ml-1">
-          <button type="button" @click="editDescription()" class="px-1 hover:bg-gray-400 rounded-lg hover:text-purple-700 transition ease-in-out duration-150">
+          <button type="button" @click="editDescription()" class="px-1 bg-gray-300 hover:bg-gray-100 rounded-lg hover:text-indigo-600 text-gray-800 transition ease-in-out duration-150">
             <i class="fas fa-pen"></i>
           </button>
         </span>
@@ -52,45 +52,39 @@
     <div class="mt-4 text-xl text-center font-semibold">
       Goals: {{ goals.length }}
     </div>
-    <div class="flex flex-wrap -mb-4 mt-2">
+    <div class="flex flex-wrap">
       <div class="w-full md:w-1/2 lg:w-1/4 px-2">
-        <div class="pb-4">
-          <div class="text-lg text-center text-gray-800 font-semibold pt-2">
-            No Status
-          </div>
-          <div v-for="goal in filteredgoals('unsigned')" :key="goal.id">
-            <router-link :to="{ name: 'goal', params: { id: project.id, goal_id: goal.id, goal: goal, project: project} }">
-              <goal :title="goal.title"></goal>
-            </router-link>
-          </div>
-          <goalform @addGoal="createGoal" status="unsigned" :project="project"></goalform>
+        <div class="text-lg text-center text-gray-800 font-semibold pt-2">
+          No Status
         </div>
+        <div v-for="goal in filteredgoals('unsigned')" :key="goal.id">
+          <router-link :to="{ name: 'goal', params: { id: project.id, goal_id: goal.id, goal: goal, project: project} }">
+            <goal :title="goal.title"></goal>
+          </router-link>
+        </div>
+        <goalform @addGoal="createGoal" status="unsigned" :project="project"></goalform>
       </div>
       <div class="w-full md:w-1/2 lg:w-1/4 px-2">
-        <div class="pb-4">
-          <div class="text-lg text-center text-gray-800 font-semibold pt-2">
-            Not Started
-          </div>
-          <div v-for="goal in filteredgoals('not_started')" :key="goal.id">
-            <router-link :to="{ name: 'goal', params: { id: project.id, goal_id: goal.id, project: project, goal: goal } }">
-              <goal :title="goal.title"></goal>
-            </router-link>
-          </div>
-          <goalform @addGoal="createGoal" status="not_started" :project="project"></goalform>
+        <div class="text-lg text-center text-gray-800 font-semibold pt-2">
+          Not Started
         </div>
+        <div v-for="goal in filteredgoals('not_started')" :key="goal.id">
+          <router-link :to="{ name: 'goal', params: { id: project.id, goal_id: goal.id, project: project, goal: goal } }">
+            <goal :title="goal.title"></goal>
+          </router-link>
+        </div>
+        <goalform @addGoal="createGoal" status="not_started" :project="project"></goalform>
       </div>
       <div class="w-full md:w-1/2 lg:w-1/4 px-2">
-        <div class="pb-4">
-          <div class="text-lg text-center text-gray-800 font-semibold pt-2">
-            In Progress
-          </div>
-          <div v-for="goal in filteredgoals('in_progress')" :key="goal.id">
-            <router-link :to="{ name: 'goal', params: { id: project.id, goal_id: goal.id, project: project, goal: goal } }">
-              <goal :title="goal.title"></goal>
-            </router-link>
-          </div>
-          <goalform @addGoal="createGoal" status="in_progress" :project="project"></goalform>
+        <div class="text-lg text-center text-gray-800 font-semibold pt-2">
+          In Progress
         </div>
+        <div v-for="goal in filteredgoals('in_progress')" :key="goal.id">
+          <router-link :to="{ name: 'goal', params: { id: project.id, goal_id: goal.id, project: project, goal: goal } }">
+            <goal :title="goal.title"></goal>
+          </router-link>
+        </div>
+        <goalform @addGoal="createGoal" status="in_progress" :project="project"></goalform>
       </div>
       <div class="w-full md:w-1/2 lg:w-1/4 px-2">
         <div class="pb-4">

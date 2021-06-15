@@ -1,34 +1,32 @@
 <template>
-  <div class="bg-gray-200 h-full">
+  <div class="bg-gray-100 h-full">
     <div class="" v-if="ownedProjects.length">
-      <div class="bg-gray-100 shadow">
-        <div class="mx-8 py-3">
-          <div class="text-gray-900 text-2xl font-semibold">Projects</div>
-        </div>
+      <div class="bg-white shadow px-6 py-3 text-gray-900 text-2xl font-semibold">
+        Projects
       </div>
-      <div class="mx-8 my-2 text-xl font-semibold text-gray-900">
+      <div class="px-6 my-2 text-xl font-semibold text-gray-900">
         Your Projects:
       </div>
-      <div class="mx-8 space-y-2">
-        <div class="px-3 py-3 w-full rounded-lg overflow-hidden shadow-lg transition-shadow duration-150 hover:shadow-xl border-gray-300 bg-gray-100"
+      <div class="mx-6 space-y-2">
+        <div class="px-3 py-2 w-full rounded-lg overflow-hidden shadow transition-shadow duration-150 hover:shadow-lg bg-white"
           v-for="project in ownedProjects" :key="project.id">
           <project :project="project"></project>
         </div>
       </div>
     </div>
     <div class="" v-if="sharedProjects.length">
-      <div class="mx-8 my-2 text-xl font-semibold text-gray-900">
+      <div class="px-6 my-2 text-xl font-semibold text-gray-900">
         Shared Projects
       </div>
-      <div class="mx-8 space-y-2">
-        <div class="px-3 py-3 w-full rounded-lg overflow-hidden shadow-lg transition-shadow duration-150 hover:shadow-xl border-gray-300 bg-gray-100"
+      <div class="mx-6 space-y-2">
+        <div class="px-3 py-2 w-full rounded-lg overflow-hidden shadow transition-shadow duration-150 hover:shadow-lg bg-white"
           v-for="project in sharedProjects" :key="project.id">
           <project :project="project"></project>
         </div>
       </div>
     </div>
     <div class="" v-if="!sharedProjects.length && !ownedProjects.length">
-      <div class="w-full py-2 text-center text-xl text-gray-800 font-semibold">
+      <div class="w-full py-2 px-6 text-center text-xl text-gray-900 font-semibold">
         You don't have any projects. Get started by creating one.
       </div>
     </div>

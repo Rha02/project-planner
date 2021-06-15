@@ -1,65 +1,57 @@
 <template>
-  <div class="justify-center text-gray-900 bg-gray-200 overflow-y-auto h-screen relative" v-on:scroll="positionLines()">
-    <div class="bg-gray-100 shadow z-30 relative">
-      <div class="mx-8 py-2 font-semibold">
-        <div class="text-2xl  w-full">
-          <router-link :to="`/projects/${$route.params.id}`" class="font-semibold text-blue-600 hover:underline">
-            {{ project.title }}
-          </router-link>
-        </div>
+  <div class="" v-on:scroll="positionLines()">
+    <div class="shadow border-b border-gray-300 z-30 bg-white px-6 py-3 text-2xl font-semibold z-30 relative">
+      <router-link :to="`/projects/${$route.params.id}`" class="font-semibold text-blue-600 hover:underline">
+        {{ project.title }}
+      </router-link>
+    </div>
+    <div class="bg-gray-100 text-xl flex justify-between px-6 py-2 z-30 relative">
+      <div class="font-semibold text-gray-800">
+        <span class="text-gray-900">{{ goal.title }}</span>
+        <span class="ml-1 text-lg">
+          <button type="button" @click="inSettings = true" class="px-1 bg-gray-300 hover:bg-gray-100 hover:text-blue-600 rounded-lg transition ease-in-out duration-150">
+            <i class="fas fa-pen"></i>
+          </button>
+        </span>
+      </div>
+      <div class="text-gray-900 font-semibold text-xl">
+        Status:
+        <span class="text-green-600" v-if="goal.status == 'complete'">Completed</span>
+        <span class="text-orange-600" v-if="goal.status == 'in_progress'">In Progress</span>
+        <span class="text-red-600" v-if="goal.status == 'not_started'">Not Started</span>
+        <span class="text-gray-600" v-if="goal.status == 'unsigned'">Unsigned</span>
       </div>
     </div>
-      <div class="mx-8 pt-2 flex justify-between z-20 relative bg-gray-200">
-        <div class="font-semibold text-xl text-gray-700 hover:text-gray-700">
-          <span class="text-gray-800">{{ goal.title }}</span>
-          <span class="ml-1 text-lg">
-            <button type="button" @click="inSettings = true" class="px-1 bg-gray-400 hover:bg-gray-300 hover:text-blue-600 rounded-lg transition ease-in-out duration-150">
-              <i class="fas fa-pen"></i>
-            </button>
-          </span>
-        </div>
-        <div class="w-4/5 md:w-1/4 lg:w-1/3 xl:w-1/5 flex relative z-50">
-          <div class="text-gray-800 font-semibold text-xl flex-none relative z-50">
-            Status:
-            <span class="text-green-600" v-if="goal.status == 'complete'">Completed</span>
-            <span class="text-orange-600" v-if="goal.status == 'in_progress'">In Progress</span>
-            <span class="text-red-600" v-if="goal.status == 'not_started'">Not Started</span>
-            <span class="text-gray-600" v-if="goal.status == 'unsigned'">Unsigned</span>
+    <div class="py-2 text-lg text-center font-semibold flex justify-center bg-gray-100 z-30 relative">
+      Tasks: {{ tasks.length }}
+      <div class="mx-2 text-center text-lg text-blue-600 hover:text-blue-500 transition ease-in-out duration-150">
+        <button type="button" @click="creating_task = true" class="w-full">
+          <i class="far fa-plus-square"></i>
+        </button>
+      </div>
+    </div>
+    <div class="mx-6 px-4 py-4 rounded shadow bg-white h-3/4 overflow-y-auto"
+          v-on:scroll="positionLines()" v-if="tasks.length">
+        <div class="flex flex-wrap justify-around" v-for="leveledTasks in taskHierarchy" :key="leveledTasks[0].depth">
+          <div class="w-1/4 px-2 py-2 flex justify-center items-center mb-12"
+                v-for="task in leveledTasks" :key="task.id">
+            <task :id="`id${task.id}`"
+                  :task="task"
+                  :project="project"
+                  :members="members"
+                  :chain="chain"
+                  @taskDeleted="removeTask"
+                  @taskUpdated="updateTask"
+                  @chainTasks="chainingTasks"
+                  @breakSequence="breakSequence"
+                  @cancelChaining="resetChain()"></task>
           </div>
         </div>
-      </div>
-      <div class="py-2 text-xl text-center font-semibold flex justify-center z-20 relative bg-gray-200">
-        Tasks: {{ tasks.length }}
-        <div class="mx-2 text-center text-xl text-blue-600 hover:text-blue-500 transition ease-in-out duration-150">
-          <button type="button" @click="creating_task = true" class="w-full">
-            <i class="far fa-plus-square"></i>
-          </button>
-        </div>
-      </div>
-      <div class="mx-4 py-2 bg-white shadow rounded-lg overflow-y-auto shadow-lg"
-            style="height:75vh;"
-            v-on:scroll="positionLines()" v-if="tasks.length">
-          <div class="" v-for="leveledTasks in taskHierarchy" :key="leveledTasks[0].depth">
-            <div class="mx-4 my-4 flex flex-wrap justify-around">
-              <div class="w-1/4 mb-16 px-2 py-2 flex justify-center items-center"
-                    v-for="task in leveledTasks" :key="task.id">
-                <task :id="`id${task.id}`"
-                      :task="task"
-                      :project="project"
-                      :members="members"
-                      :chain="chain"
-                      @taskDeleted="removeTask"
-                      @taskUpdated="updateTask"
-                      @chainTasks="chainingTasks"
-                      @breakSequence="breakSequence"
-                      @cancelChaining="resetChain()"></task>
-              </div>
-            </div>
-          </div>
-      </div>
-      <div class="mx-8" v-else>
-        There are no tasks for this goal.
-      </div>
+    </div>
+    <div class="mx-8" v-else>
+      There are no tasks for this goal.
+    </div>
+    <div class="bg-gray-100 h-1/4 z-30 relative"></div>
     <div class="" v-if="inSettings">
       <goal-settings :goal="goal" @stopShowing="inSettings = false" @deleteGoal="deleteGoal()" @updateGoal="updateGoal"></goal-settings>
     </div>

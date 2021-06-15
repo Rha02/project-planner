@@ -1,23 +1,21 @@
 <template>
-    <div class="bg-gray-200 h-full">
-      <div class="bg-gray-100 shadow">
-        <div class="mx-8 py-3">
-          <div class="text-gray-900 text-2xl font-semibold">Dashboard</div>
-        </div>
+    <div class="bg-gray-100 h-full">
+      <div class="shadow border-b border-gray-300 z-30 bg-white px-6 py-3 text-2xl font-semibold">
+        <div class="text-gray-900 text-2xl font-semibold">Dashboard</div>
       </div>
-      <div class="flex justify-between items-center my-2">
-        <div class="mx-8 text-xl font-semibold text-gray-900">
+      <div class="flex justify-between items-center px-6 py-2 text-xl">
+        <div class="font-semibold text-gray-900">
           Your Tasks:
         </div>
-        <div class="items-center mx-8 items-center font-semibold text-gray-700 text-lg">
+        <div class="items-center items-center font-semibold text-gray-700 text-lg">
           <span class="mr-2">Filter</span>
-          <span @click="inFilters = ! inFilters" class="px-2 py-1 text-2xl text-gray-700 hover:bg-gray-400 transition ease-in-out duration-150 rounded-lg">
+          <span @click="inFilters = ! inFilters" class="px-2 py-1 text-2xl text-gray-700 bg-gray-300 hover:bg-gray-100 hover:text-indigo-600 transition ease-in-out duration-150 rounded-lg">
             <i class="fas fa-sliders-h"></i>
           </span>
         </div>
       </div>
-      <div class="mx-8 bg-gray-200 text-gray-800 mb-2" v-if="inFilters">
-        <div class="px-2 flex flex-wrap">
+      <div class="px-6 bg-gray-100 text-gray-800 mb-2" v-if="inFilters">
+        <div class="flex flex-wrap">
           <div class="w-1/3">
             <div class="mr-12 border-b-2 border-gray-600 pb-2 text-lg font-semibold">
               Task
@@ -95,9 +93,9 @@
           </div>
         </div>
       </div>
-      <div class="mx-8 space-y-2" v-if="tasks.length">
-        <div v-if="sortedTasks.length">
-          <div class="" v-for="task in sortedTasks" :key="task.id">
+      <div class="px-6" v-if="tasks.length">
+        <div class="space-y-2" v-if="sortedTasks.length">
+          <div v-for="task in sortedTasks" :key="task.id">
             <task :task="task"></task>
           </div>
         </div>

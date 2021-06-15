@@ -1,10 +1,6 @@
 <template>
-  <div class="">
-    <div class="text-gray-700 lg:text-white hover:text-gray-700 shadow hover:shadow-lg transition ease-in-out duration-150 rounded-md text-lg bg-gray-100 mx-2 my-3 py-1 px-2 items-center">
-      <div class="w-full text-gray-800 overflow-auto">
-        {{ title }}
-      </div>
-    </div>
+  <div class="text-gray-900 rounded text-lg bg-white mx-2 my-3 py-1 px-2 text-gray-800 overflow-auto shadow hover:shadow-lg transition ease-in-out duration-150">
+    {{ title }}
   </div>
 </template>
 

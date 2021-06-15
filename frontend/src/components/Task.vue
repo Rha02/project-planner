@@ -1,25 +1,23 @@
 <template>
-  <div class="rounded border-l-4 bg-white text-white hover:text-gray-700 shadow px-2 text-center border-gray-600"
+  <div class="rounded border-l-4 text-white hover:text-gray-700 shadow px-2 text-center border-gray-400"
         v-bind:class="{ 'border-green-600': task.status == 'complete', 'border-orange-600': task.status == 'in_progress', 'border-red-600': task.status == 'not_started' }">
-    <div class="flex">
-      <span class="text-gray-800">
+    <div class="text-gray-800">
         {{ task.body }}
-      </span>
     </div>
     <div class="text-gray-700 mt-1">
       <span class="font-semibold">Assignee:</span> {{ assignedUser }}
     </div>
     <div class="flex justify-between mb-1">
-      <div class="text-center hover:text-blue-600 hover:bg-gray-300 rounded-lg transition ease-in-out duration-150"
+      <div class="text-center hover:text-blue-500 hover:bg-gray-100 rounded-lg transition ease-in-out duration-150"
             v-bind:class="{ 'text-blue-600': this.chain.isChaining }">
         <button type="button" class="px-1" @click="chainTasks()" v-if="! lockChain && !isAlreadyChained">
           <i class="fas fa-link"></i>
         </button>
-        <button type="button" class="px-1 text-red-600" @click="cancelChaining()" v-if="lockChain && !isAlreadyChained">
+        <button type="button" class="px-2 text-red-600" @click="cancelChaining()" v-if="lockChain && !isAlreadyChained">
           <i class="fas fa-times"></i>
         </button>
       </div>
-      <div class="text-center hover:text-blue-600 hover:bg-gray-300 rounded-lg transition ease-in-out duration-150">
+      <div class="text-center hover:text-blue-500 hover:bg-gray-100 rounded-lg transition ease-in-out duration-150">
         <button type="button" class="px-1" @click="editing = true">
           <i class="fas fa-pen"></i>
         </button>

@@ -1,29 +1,25 @@
 <template>
-  <div class="flex h-full">
-    <div class="bg-indigo-800 lg:w-1/5 xl:w-1/6" v-if="isAuth">
-      <div class="mx-2">
-        <div class="text-2xl px-2 py-1 font-semibold text-indigo-100">
-          TodoApp
-        </div>
-        <div class="text-lg text-indigo-300 font-semibold">
-          <router-link to="/dashboard" class="py-2 px-2 block hover:bg-indigo-900 hover:text-indigo-100 rounded-lg">
-            <i class="fas fa-home"></i> Dashboard
-          </router-link>
-          <router-link to="/projects" class="py-2 px-2 block hover:bg-indigo-900 hover:text-indigo-100 rounded-lg">
-            <i class="far fa-folder"></i> Projects
-          </router-link>
-          <a href="" @click.prevent="createProject()" class="py-2 px-2 block hover:bg-indigo-900 hover:text-indigo-100 rounded-lg">
-            <i class="fas fa-folder-plus"></i> Create Project
-          </a>
-          <a href="" @click.prevent="logout()" class="py-2 px-2 block hover:bg-indigo-900 hover:text-indigo-100 rounded-lg">
-            Logout
-          </a>
-        </div>
+  <div class="flex h-screen">
+    <div class="bg-indigo-800 lg:w-1/5 xl:w-1/6 h-full px-2" v-if="isAuth">
+      <div class="text-2xl px-2 py-3 font-bold text-indigo-100">
+        TodoApp
+      </div>
+      <div class="text-xl text-indigo-200">
+        <router-link to="/dashboard" class="py-2 px-2 block hover:bg-indigo-700 hover:text-indigo-100 rounded-lg">
+          <i class="fas fa-home"></i> Dashboard
+        </router-link>
+        <router-link to="/projects" class="py-2 px-2 block hover:bg-indigo-700 hover:text-indigo-100 rounded-lg">
+          <i class="far fa-folder"></i> Projects
+        </router-link>
+        <a href="" @click.prevent="createProject()" class="py-2 px-2 block hover:bg-indigo-700 hover:text-indigo-100 rounded-lg">
+          <i class="fas fa-folder-plus"></i> Create Project
+        </a>
+        <a href="" @click.prevent="logout()" class="py-2 px-2 block hover:bg-indigo-700 hover:text-indigo-100 rounded-lg">
+          Logout
+        </a>
       </div>
     </div>
-    <div class="w-full max-w-8xl mx-auto h-screen">
-      <router-view></router-view>
-    </div>
+    <router-view class="w-4/5 xl:w-5/6 overflow-y-auto"></router-view>
   </div>
 </template>
 
