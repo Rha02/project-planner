@@ -16,10 +16,10 @@
       </div>
       <div class="text-gray-900 font-semibold text-xl">
         Status:
-        <span class="text-green-600" v-if="goal.status == 'complete'">Completed</span>
-        <span class="text-orange-600" v-if="goal.status == 'in_progress'">In Progress</span>
-        <span class="text-red-600" v-if="goal.status == 'not_started'">Not Started</span>
-        <span class="text-gray-600" v-if="goal.status == 'unsigned'">Unsigned</span>
+        <span class="text-green-600" v-if="goal.status === 'complete'">Completed</span>
+        <span class="text-orange-600" v-if="goal.status === 'in_progress'">In Progress</span>
+        <span class="text-red-600" v-if="goal.status === 'not_started'">Not Started</span>
+        <span class="text-gray-600" v-if="goal.status === 'unsigned'">Unsigned</span>
       </div>
     </div>
     <div class="py-2 text-lg text-center font-semibold flex justify-center bg-gray-100 z-30 relative">
@@ -119,7 +119,7 @@ export default {
   methods: {
     breakSequence (taskId) {
       const taskIdx = this.tasks.findIndex(t => t.id === taskId)
-      for (var j = 0; j < this.arrows.length; j++) {
+      for (let j = 0; j < this.arrows.length; j++) {
         if (this.arrows[j].start === taskId || this.arrows[j].end === taskId) {
           if (this.arrows[j].start === taskId) {
             this.tasks[this.tasks.findIndex(t => t.id === this.arrows[j].end)].prev_tasks = []
@@ -152,7 +152,7 @@ export default {
             this.goal.status = res.data.status
           }
         })
-        .catch(res => {
+        .catch(() => {
           alert('Server-side error occurred.')
         })
     },
@@ -165,33 +165,17 @@ export default {
             this.$router.push(`/projects/${this.project.id}`)
           }
         })
-        .catch(res => {
+        .catch(() => {
           alert('Server-side error occurred.')
         })
     },
     positionLines () {
-      for (var i = 0; i < this.arrows.length; i++) {
+      for (let i = 0; i < this.arrows.length; i++) {
         this.arrows[i].line.position()
       }
     },
-    calculateDepth (task) {
-      let depth = 0
-      for (var i = 0; i < task.prev_tasks.length; i++) {
-        const prevTaskIdx = this.tasks.findIndex(t => t.id === task.prev_tasks[i].from_task_id)
-        const prevTask = this.tasks[prevTaskIdx]
-        if (!prevTask.depth) {
-          prevTask.depth = this.calculateDepth(prevTask)
-          this.tasks[prevTaskIdx].depth = prevTask.depth
-        } else if (prevTask.depth > depth) {
-          depth = prevTask.depth
-        }
-      }
-      this.tasks[this.tasks.findIndex(t => t.id === task.id)].depth = depth + 1
-      return depth + 1
-    },
     createTask (payload) {
       this.tasks.push(payload)
-      this.calculateDepth(payload)
       this.creating_task = false
     },
     removeTask (taskId) {
@@ -200,10 +184,9 @@ export default {
       })
     },
     updateTask (payload) {
-      for (var i = 0; i < this.tasks.length; i++) {
+      for (let i = 0; i < this.tasks.length; i++) {
         if (this.tasks[i].id === payload.id) {
           this.tasks.splice(i, 1, payload)
-          this.calculateDepth(this.tasks[i])
         }
       }
     },
@@ -214,7 +197,6 @@ export default {
           from_task_id: this.chain.firstChainedTaskId
         })
           .then(res => {
-            this.calculateDepth(this.tasks.find(t => t.id === res.data.to_task_id))
             this.createArrowLines(res.data)
           })
       } else {
@@ -246,21 +228,21 @@ export default {
         .then(res => {
           this.project = res.data
         })
-        .catch(res => {
+        .catch(() => {
           alert('An error has occurred?')
         })
       this.goalPromise = axios.get(`/projects/${this.$route.params.id}/goals/${this.$route.params.goal_id}?token=${this.authToken}`)
         .then(res => {
           this.goal = res.data
         })
-        .catch(res => {
+        .catch(() => {
           alert('An error has occurred?')
         })
       this.membersPromise = axios.get(`/projects/${this.$route.params.id}/members?token=${this.authToken}`)
         .then(res => {
           this.members = res.data
         })
-        .catch(res => {
+        .catch(() => {
           alert('An error has occurred?')
         })
     } else {
@@ -271,9 +253,6 @@ export default {
     this.tasksPromise = axios.get(`/projects/${this.$route.params.id}/goals/${this.$route.params.goal_id}/tasks?token=${this.authToken}`)
       .then(res => {
         this.tasks = res.data
-        for (var i = 0; i < this.tasks.length; i++) {
-          this.calculateDepth(this.tasks[i])
-        }
       })
   },
   async mounted () {
@@ -281,14 +260,14 @@ export default {
     await this.goalPromise
     await this.membersPromise
     await this.tasksPromise
-    for (var i = 0; i < this.tasks.length; i++) {
-      for (var j = 0; j < this.tasks[i].next_tasks.length; j++) {
+    for (let i = 0; i < this.tasks.length; i++) {
+      for (let j = 0; j < this.tasks[i].next_tasks.length; j++) {
         this.createArrowLines(this.tasks[i].next_tasks[j])
       }
     }
   },
   destroyed () {
-    for (var i = 0; i < this.arrows.length; i++) {
+    for (let i = 0; i < this.arrows.length; i++) {
       this.arrows[i].line.remove()
     }
   }

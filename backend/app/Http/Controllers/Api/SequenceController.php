@@ -2,78 +2,86 @@
 
 namespace App\Http\Controllers\Api;
 
-use Illuminate\Http\Request;
-use App\Models\Sequence;
-use App\Models\Project;
-use App\Models\Task;
 use App\Http\Controllers\Controller;
+use App\Models\Project;
+use App\Models\Sequence;
+use App\Traits\TaskDepthCalculator;
 
 class SequenceController extends Controller
 {
-  protected $checkingSequences;
+    use TaskDepthCalculator;
 
-  protected $sequences;
+    protected $checkingSequences;
 
-  public function __construct()
-  {
-    $this->middleware('member');
+    protected $sequences;
 
-    $this->checkingSequences = collect([]);
+    public function __construct()
+    {
+        $this->middleware('member');
 
-    $this->sequences = Sequence::all();
-  }
+        $this->checkingSequences = collect([]);
 
-  public function store(Project $project)
-  {
-    $attributes = request()->validate([
-      'to_task_id' => 'integer|exists:tasks,id|different:from_task_id',
-      'from_task_id' => 'integer|exists:tasks,id|different:to_task_id'
-    ]);
-
-    $isInDatabase = Sequence::whereIn('to_task_id', $attributes)
-                              ->whereIn('from_task_id', $attributes)
-                              ->get()->toArray();
-
-    if ($isInDatabase) {
-      return response()->json([
-        'is_error' => true,
-        'errors' => 'Invalid Sequence'
-      ]);
+        $this->sequences = Sequence::all();
     }
 
-    if ($this->checkIfLoops($attributes)) {
-      return response()->json([
-        'is_error' => true,
-        'errors' => 'Invalid Sequence'
-      ]);
+    public function store(Project $project)
+    {
+        // Validating sequence
+        $attributes = request()->validate([
+            'to_task_id' => 'integer|exists:tasks,id|different:from_task_id',
+            'from_task_id' => 'integer|exists:tasks,id|different:to_task_id'
+        ]);
+
+        $isInDatabase = Sequence::whereIn('to_task_id', $attributes)
+            ->whereIn('from_task_id', $attributes)
+            ->get()->toArray();
+
+        if ($isInDatabase) {
+            return response()->json([
+                'is_error' => true,
+                'errors' => 'Invalid Sequence'
+            ]);
+        }
+
+        if ($this->checkIfLoops($attributes)) {
+            return response()->json([
+                'is_error' => true,
+                'errors' => 'Invalid Sequence'
+            ]);
+        }
+
+        // Updating depth field for the affected task
+        $this->updateDepth($attributes['to_task_id']);
+
+        // Storing the sequence and returning it
+        $sequence = Sequence::create($attributes);
+
+        return $sequence->toArray();
     }
 
-    $sequence = Sequence::create($attributes);
+    protected function checkIfLoops($currSequence)
+    {
+        if ($this->checkingSequences->contains($currSequence)) {
+            return True;
+        }
 
-    return $sequence->toArray();
-  }
+        $this->checkingSequences->push($currSequence);
 
-  public function destroy(Project $project, Task $task)
-  {
-    Sequence::where('to_task_id', $task->id)->orWhere('from_task_id', $task->id)->delete();
+        $this->sequences->push($currSequence);
 
-    return 'Success';
-  }
+        foreach ($this->sequences->where('to_task_id', $currSequence['from_task_id']) as $sequence) {
+            return $this->checkIfLoops($sequence);
+        }
 
-  protected function checkIfLoops($currSequence)
-  {
-    if ($this->checkingSequences->contains($currSequence)) {
-      return True;
+        return False;
     }
 
-    $this->checkingSequences->push($currSequence);
+    public function destroy(Project $project, $taskId)
+    {
+        $this->updateSequence($taskId);
 
-    $this->sequences->push($currSequence);
+        Sequence::where('to_task_id', $taskId)->orWhere('from_task_id', $taskId)->delete();
 
-    foreach ($this->sequences->where('to_task_id', $currSequence['from_task_id']) as $sequence) {
-      return $this->checkIfLoops($sequence);
+        return 'Success';
     }
-
-    return False;
-  }
 }

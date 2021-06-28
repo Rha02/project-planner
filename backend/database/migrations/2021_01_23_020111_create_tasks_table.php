@@ -19,6 +19,7 @@ class CreateTasksTable extends Migration
             $table->foreignId('user_id')->nullable();
             $table->text('body');
             $table->string('status');
+            $table->integer('depth')->default(1);
             $table->timestamps();
 
             $table->foreign('goal_id')->references('id')->on('goals')->onDelete('CASCADE');

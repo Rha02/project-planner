@@ -1,6 +1,6 @@
 <template>
   <div class="rounded border-l-4 text-white hover:text-gray-700 shadow px-2 text-center border-gray-400"
-        v-bind:class="{ 'border-green-600': task.status == 'complete', 'border-orange-600': task.status == 'in_progress', 'border-red-600': task.status == 'not_started' }">
+        v-bind:class="{ 'border-green-600': task.status === 'complete', 'border-yellow-600': task.status === 'in_progress', 'border-red-600': task.status === 'not_started' }">
     <div class="text-gray-800">
         {{ task.body }}
     </div>
@@ -70,7 +70,7 @@ export default {
             this.$emit('breakSequence', this.task.id)
           }
         })
-        .catch(res => alert('Something went wrong!'))
+        .catch(() => alert('Something went wrong!'))
     },
     deleteTask () {
       axios.delete(this.taskUri)
@@ -81,7 +81,7 @@ export default {
             this.$emit('taskDeleted', this.task.id)
           }
         })
-        .catch(res => {
+        .catch(() => {
           alert('Server-side error occurred!')
         })
     },
@@ -98,7 +98,7 @@ export default {
             this.$emit('taskUpdated', res.data)
           }
         })
-        .catch(res => {
+        .catch(() => {
           alert('Server-side error occurred!')
         })
       this.editing = false
