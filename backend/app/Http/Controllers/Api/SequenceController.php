@@ -33,8 +33,7 @@ class SequenceController extends Controller
         ]);
 
         $isInDatabase = Sequence::whereIn('to_task_id', $attributes)
-            ->whereIn('from_task_id', $attributes)
-            ->get()->toArray();
+            ->whereIn('from_task_id', $attributes)->first();
 
         if ($isInDatabase) {
             return response()->json([
@@ -50,11 +49,11 @@ class SequenceController extends Controller
             ]);
         }
 
-        // Updating depth field for the affected task
-        $this->updateDepth($attributes['to_task_id']);
-
         // Storing the sequence and returning it
         $sequence = Sequence::create($attributes);
+
+        // Updating depth field for the affected task
+        $this->updateDepth($attributes['to_task_id']);
 
         return $sequence->toArray();
     }
